@@ -1,9 +1,14 @@
 <?php
 require_once('../db_config.php');
+header('Content-Type: application/json');
 
-$data = json_decode(file_get_contents("php://input"), true);
-$userEmail = $data['email'];
 
+if (!isset($_GET['email'])) {
+    echo json_encode(array("success" => false, "exist" => false, "error" => "Email parameter not provided"));
+    exit;
+}
+
+$userEmail = $_GET['email'];
 $sql = "SELECT * FROM `user_table` WHERE `email` = ?";
 $stmt = $connDB->prepare($sql);
 
@@ -15,23 +20,19 @@ if ($stmt) {
         if ($result->num_rows > 0) {
             // User exists, fetch data
             $row = $result->fetch_assoc();
-	    error_log("row result: $row ", 3, "/var/tmp/php_errors.log");
             $userName = $row['name'];
             $userIdentity = $row['identity']; 
-            echo json_encode(array(
-                "success" => true,
-                "exist" => true,
-                "id" => $row['id'],
-                "email" => $userEmail,
-                "name" => $userName,
-                "identity" => $userIdentity
-            ));
+            $userId = $row['id'];
+	    $arr = array("success" => true, "exist" => true, "id" => $userId, "email" => $userEmail, "name" => $userName, "identity" => $userIdentity);
+	    echo json_encode($arr);
+	    error_log("success => true, exist => true, id => $userId, email => $userEmail, name => $userName, identity => $userIdentity", 3, "/var/tmp/php_errors.log");
         } else {
             // User does not exist
             echo json_encode(array(
                 "success" => true,
                 "exist" => false
             ));
+	    error_log("success => true, exist => false, id => $userId, email => $userEmail, name => $userName, identity => $userIdentity", 3, "/var/tmp/php_errors.log");
         }
     } else {
         // SQL execution failed
