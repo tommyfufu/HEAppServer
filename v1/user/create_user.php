@@ -10,10 +10,10 @@
 	$stmt->bind_param("sss", $userEmail, $userName, $userIdentity);
 
 	if ($stmt->execute()) {
-        	error_log("sql create user success",3,"/var/tmp/php_errors.log");
+        	//error_log("sql create user success",3,"/var/tmp/php_errors.log");
     		echo json_encode(array("success" => true, "exist" => false, "id" => $stmt->insert_id, "email" => $userEmail, "name" => $userName, "identity" => $userIdentity));
 	} else {
-        	error_log("sql create user fail",3,"/var/tmp/php_errors.log");
+        	//error_log("sql create user fail",3,"/var/tmp/php_errors.log");
     		echo json_encode(array("success" => false, "exist" => true));
 	}
 
