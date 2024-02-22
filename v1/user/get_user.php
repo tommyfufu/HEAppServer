@@ -22,10 +22,12 @@ if ($stmt) {
             $row = $result->fetch_assoc();
             $userName = $row['name'];
             $userIdentity = $row['identity']; 
-            $userId = $row['id'];
-	    $arr = array("success" => true, "exist" => true, "id" => $userId, "email" => $userEmail, "name" => $userName, "identity" => $userIdentity);
+	    $userId = $row['id'];
+	    $userBirthday = $row['birthday'];
+	    $userGender = $row['gender'];
+	    $arr = array("success" => true, "exist" => true, "id" => $userId, "email" => $userEmail, "name" => $userName, "identity" => $userIdentity, "birthday" => $userBirthday, "gender" => $userGender);
 	    echo json_encode($arr);
-	    error_log("success => true, exist => true, id => $userId, email => $userEmail, name => $userName, identity => $userIdentity", 3, "/var/tmp/php_errors.log");
+	    error_log("success => true, exist => true, id => $userId, email => $userEmail, name => $userName, identity => $userIdentity, birthday => $userBirthday, gender => $userGender", 3, "/var/tmp/php_errors.log");
         } else {
             // User does not exist
             echo json_encode(array(

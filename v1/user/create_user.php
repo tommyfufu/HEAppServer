@@ -1,22 +1,26 @@
 <?php
-	require_once('../db_config.php');
-	$data = json_decode(file_get_contents("php://input"), true);
-	$userEmail = $data['email'];
-	$userName = $data['name'];
-	$userIdentity = $data['identity'];
+require_once('../db_config.php');
+$data = json_decode(file_get_contents("php://input"), true);
 
-	$sql = "INSERT INTO `user_table` (`email`, `name`, `identity`) VALUES (?, ?, ?)";
-	$stmt = $connDB->prepare($sql);
-	$stmt->bind_param("sss", $userEmail, $userName, $userIdentity);
+$userEmail = $data['email'];
+$userName = $data['name'];
+$userIdentity = $data['identity'];
+$userBirthday = $data['birthday'];
+$userGender = $data['gender'];
 
-	if ($stmt->execute()) {
-        	//error_log("sql create user success",3,"/var/tmp/php_errors.log");
-    		echo json_encode(array("success" => true, "exist" => false, "id" => $stmt->insert_id, "email" => $userEmail, "name" => $userName, "identity" => $userIdentity));
-	} else {
-        	//error_log("sql create user fail",3,"/var/tmp/php_errors.log");
-    		echo json_encode(array("success" => false, "exist" => true));
-	}
+$sql = "INSERT INTO `user_table` (`email`, `name`, `identity`, `birthday`, `gender`) VALUES (?, ?, ?, ?, ?)";
+$stmt = $connDB->prepare($sql);
 
-	$stmt->close();
+if ($stmt !== false) {
+    $stmt->bind_param("sssss", $userEmail, $userName, $userIdentity, $userBirthday, $userGender);
+
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true, "exist" => false, "id" => $stmt->insert_id, "email" => $userEmail, "name" => $userName, "identity" => $userIdentity, "birthday" => $userBirthday, "gender" => $userGender]);
+    } else {
+        echo json_encode(["success" => false, "exist" => true]);
+    }
+    $stmt->close();
+} else {
+    echo json_encode(["success" => false, "message" => "Database error"]);
+}
 ?>
-
