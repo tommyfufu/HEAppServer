@@ -1,0 +1,10 @@
+<form [formGroup]="medicationForm" (ngSubmit)="submit()">
+  <div formArrayName="medications">
+    <div *ngFor="let medication of medications.controls; let i = index">
+      <input type="text" [formControlName]="i">
+      <button type="button" (click)="removeMedicationField(i)">刪除藥品</button>
+    </div>
+  </div>
+  <button type="button" (click)="addMedicationField()">增加藥品</button>
+  <button type="submit">送出</button>
+</form>

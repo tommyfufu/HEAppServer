@@ -1,0 +1,20 @@
+<div *ngIf="selectedPatient; else noSelection">
+  <h2>{{ selectedPatient.Name }}</h2>
+  <p>Email: {{ selectedPatient.Email }}</p>
+  <p>電話: {{ selectedPatient.Phone }}</p>
+  <p>生日: {{ selectedPatient.Birthday }}</p>
+  <div class="bulletin-board">
+    <h3>留言</h3>
+    <ul>
+      <li *ngFor="let message of getMessagesArray(selectedPatient.Messages)">
+        {{ message.date }}: <strong>{{ message.content }}</strong>
+      </li>
+    </ul>
+  </div>
+  <p>Medication: {{ selectedPatient.Medication }}</p>
+  <h3>需服藥品</h3>
+</div>
+
+<ng-template #noSelection>
+  <p>點選列表並選擇病人</p>
+</ng-template>
