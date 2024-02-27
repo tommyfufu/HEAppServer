@@ -1,5 +1,3 @@
-package WebCrud
-
 package main
 
 import (
