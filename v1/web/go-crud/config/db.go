@@ -18,11 +18,11 @@ const (
 	sqldbDriver = "mysql"
 	sqldbUser   = "rtes913"
 	sqldbPass   = "MYSQLrtes913"
-	sqldbName   = "HEdb"
+	SqldbName   = "HEdb"
 
 	// HEWebdb (MongoDB), which is used to store HEWeb users' information
 	mongodbURI        = "mongodb://140.113.151.61:27017"
-	mongodbDatabase   = "HEWEBdb"
+	MongodbDatabase   = "HEWEBdb"
 	mongodbCollection = "admin"
 )
 
@@ -31,7 +31,7 @@ func ConnectMongoDB() *mongo.Client {
 	// connect to mongo
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {
-		log.Fatalf("Error connecting to MongoDB %v, %v", mongodbDatabase, err)
+		log.Fatalf("Error connecting to MongoDB %v, %v", MongodbDatabase, err)
 	}
 
 	// Check the MongoDB connection
@@ -40,7 +40,7 @@ func ConnectMongoDB() *mongo.Client {
 
 	err = client.Ping(ctx, nil)
 	if err != nil {
-		log.Fatalf("Error connecting to MongoDB %v, %v", mongodbDatabase, err)
+		log.Fatalf("Error connecting to MongoDB %v, %v", MongodbDatabase, err)
 	}
 
 	log.Println("Connected to MongoDB!")
@@ -48,16 +48,16 @@ func ConnectMongoDB() *mongo.Client {
 }
 
 func ConnectMysqlDB() *sql.DB {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true", sqldbUser, sqldbPass, mysqldbAddr, sqldbName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true", sqldbUser, sqldbPass, mysqldbAddr, SqldbName)
 	mysqldb, err := sql.Open(sqldbDriver, dsn)
 	if err != nil {
-		log.Fatalf("Error Connecting to MySQL %v, %v", sqldbName, err)
+		log.Fatalf("Error Connecting to MySQL %v, %v", SqldbName, err)
 	}
 	err = mysqldb.Ping()
 	if err != nil {
-		log.Fatalf("Error Pinging MySQL %v, %v", sqldbName, err)
+		log.Fatalf("Error Pinging MySQL %v, %v", SqldbName, err)
 	}
 
-	log.Printf("Connected to %v", sqldbName)
+	log.Printf("Connected to %v", SqldbName)
 	return mysqldb
 }
