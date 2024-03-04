@@ -43,7 +43,7 @@ func ConnectMongoDB() *mongo.Client {
 		log.Fatalf("Error connecting to MongoDB %v, %v", MongodbDatabase, err)
 	}
 
-	log.Println("Connected to MongoDB!")
+	log.Printf("Connected to MongoDB %v", MongodbDatabase)
 	return client
 }
 
@@ -58,6 +58,6 @@ func ConnectMysqlDB() *sql.DB {
 		log.Fatalf("Error Pinging MySQL %v, %v", SqldbName, err)
 	}
 
-	log.Printf("Connected to %v", SqldbName)
+	log.Printf("Connected to MySQL %v", SqldbName)
 	return mysqldb
 }

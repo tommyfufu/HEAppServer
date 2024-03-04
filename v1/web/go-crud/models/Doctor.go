@@ -10,9 +10,11 @@ import (
 )
 
 type Doctor struct {
-	ID    string `bson:"_id,omitempty"` // MongoDB ID
-	Name  string `bson:"name"`
-	Email string `bson:"email"`
+	ID         string `bson:"_id,omitempty"` // MongoDB ID
+	Name       string `bson:"name"`
+	Email      string `bson:"email"`
+	Phone      string `bson:"phone"`
+	Department string `bson:"department"`
 }
 
 func CreateDoctor(db *mongo.Client, d Doctor) error {
