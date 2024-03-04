@@ -12,17 +12,16 @@ import (
 
 func main() {
 
+	// delcare Database
 	appUserDB := config.ConnectMysqlDB()
 	defer appUserDB.Close()
 	webUserDB := config.ConnectMongoDB()
 	defer webUserDB.Disconnect(context.TODO())
 
+	// setup router
 	r := routes.SetupRoutes(appUserDB, webUserDB)
 
-	// Setup your routes
-	// routes.SetupRoutes(r, db)
-
-	// Define an HTTP server
+	// HTTP server
 	server := &http.Server{
 		Handler:      r,
 		Addr:         "140.113.151.61:8090", // Adjust the address and port accordingly
