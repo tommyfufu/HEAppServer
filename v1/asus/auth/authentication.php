@@ -1,5 +1,5 @@
 <?php
-require 'vendor/autoload.php'; // If using Composer to manage dependencies
+require 'vendor/autoload.php';
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
