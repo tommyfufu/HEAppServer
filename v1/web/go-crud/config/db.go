@@ -21,9 +21,12 @@ const (
 	SqldbName   = "HEdb"
 
 	// HEWebdb (MongoDB), which is used to store HEWeb users' information
-	mongodbURI        = "mongodb://140.113.151.61:27017"
-	MongodbDatabase   = "HEWEBdb"
-	mongodbCollection = "admin"
+	mongodbURI          = "mongodb://140.113.151.61:27017"
+	MongodbDatabase     = "HEWEBdb"
+	MongodbUser         = "rtes913"
+	MongodbPass         = "MONGODBrtes913"
+	MongodbTestDatabase = "TESTHEWEBdb"
+	mongodbCollection   = "test"
 )
 
 func ConnectMongoDB() *mongo.Client {
