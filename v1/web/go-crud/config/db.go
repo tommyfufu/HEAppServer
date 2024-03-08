@@ -21,15 +21,16 @@ const (
 	SqldbName   = "HEdb"
 
 	// HEWebdb (MongoDB), which is used to store HEWeb users' information
-	mongodbURI          = "mongodb://140.113.151.61:27017"
-	MongodbDatabase     = "HEWEBdb"
+	mongodbAddr         = "140.113.151.61:27017"
 	MongodbUser         = "rtes913"
 	MongodbPass         = "MONGODBrtes913"
-	MongodbTestDatabase = "TESTHEWEBdb"
+	MongodbDatabase     = "HEWEBdb"
+	MongodbTestDatabase = "TestHEWebDB"
 	mongodbCollection   = "test"
 )
 
 func ConnectMongoDB() *mongo.Client {
+	mongodbURI := fmt.Sprintf("mongodb://%s:%s@%s/", MongodbUser, MongodbPass, mongodbAddr)
 	clientOptions := options.Client().ApplyURI(mongodbURI)
 	// connect to mongo
 	client, err := mongo.Connect(context.TODO(), clientOptions)
