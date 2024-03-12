@@ -1,0 +1,50 @@
+/* You can add global styles to this file, and also import other style files */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.title {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.patient-select {
+    width: 200px;
+}
+
+.patient-profile, .message-board {
+    flex-basis: 100%;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    padding: 20px;
+}
+
+.medication-entry {
+    flex-grow: 1;
+    padding-right: 20px;
+}
+
+.message-board {
+    flex-basis: 30%;
+    overflow-y: auto;
+}
