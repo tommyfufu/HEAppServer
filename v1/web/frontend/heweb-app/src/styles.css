@@ -1,4 +1,4 @@
-/* You can add global styles to this file, and also import other style files */
+You can add global styles to this file, and also import other style files
 body, html {
     height: 100%;
     margin: 0;
@@ -25,12 +25,15 @@ body, html {
 
 .patient-select {
     width: 200px;
+    color: black;
 }
 
 .patient-profile, .message-board {
     flex-basis: 100%;
     padding: 20px;
     border: 1px solid #ccc;
+    color: black;
+
 }
 
 .main-content {
