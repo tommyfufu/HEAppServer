@@ -1,0 +1,15 @@
+/* Ensure the select and option elements are visible */
+select, option {
+    color: black !important; /* Force text color to black */
+    background: white !important; /* Force background to white */
+    border: 1px solid black !important; /* Add border to see the boundaries */
+}
+
+
+.container * {
+    visibility: visible;
+}
+
+.container {
+    overflow: visible;
+}
