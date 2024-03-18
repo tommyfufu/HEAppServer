@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -12,21 +13,19 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-const (
+var (
 	// HEdb (MySQL), which is used to stroe HEApp users and records data.
-	mysqldbAddr = "140.113.151.61:3306"
+	mysqldbAddr = os.Getenv("MYSQLDB_ADDR")
 	sqldbDriver = "mysql"
-	sqldbUser   = "rtes913"
-	sqldbPass   = "MYSQLrtes913"
-	SqldbName   = "HEdb"
+	sqldbUser   = os.Getenv("MYSQL_USER")
+	sqldbPass   = os.Getenv("MYSQL_PASSWORD")
+	SqldbName   = os.Getenv("MYSQL_DATABASE")
 
 	// HEWebdb (MongoDB), which is used to store HEWeb users' information
-	mongodbAddr         = "140.113.151.61:27017"
-	MongodbUser         = "rtes913"
-	MongodbPass         = "MONGODBrtes913"
-	MongodbDatabase     = "HEWEBdb"
-	MongodbTestDatabase = "TestHEWebDB"
-	mongodbCollection   = "test"
+	mongodbAddr     = os.Getenv("MONGO_ADDR")
+	MongodbUser     = os.Getenv("MONGO_USER")
+	MongodbPass     = os.Getenv("MONGO_PASSWORD")
+	MongodbDatabase = os.Getenv("MONGO_DATABASE")
 )
 
 func ConnectMongoDB() *mongo.Client {
