@@ -1,0 +1,12 @@
+<div *ngIf="selectedPatient; else noSelection">
+  <h2>{{ selectedPatient.Name }}</h2>
+  <p>Email: {{ selectedPatient.Email }}</p>
+  <p>Phone: {{ selectedPatient.Phone }}</p>
+  <p>Birthday: {{ selectedPatient.Birthday }}</p>
+  <p>Messages: {{ selectedPatient.Messages }}</p>
+  <p>Medication: {{ selectedPatient.Medication }}</p>
+</div>
+
+<ng-template #noSelection>
+  <p>No patient selected</p>
+</ng-template>

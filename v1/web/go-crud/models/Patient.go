@@ -6,15 +6,19 @@ import (
 	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Patient struct {
-	ID       string `bson:"_id,omitempty"` // MongoDB ID
-	Name     string `bson:"name"`
-	Email    string `bson:"email"`
-	Phone    string `bson:"phone"`
-	Birthday string `bson:"birthday"`
+	ID           primitive.ObjectID `bson:"_id,omitempty"`
+	Name         string             `bson:"name"`
+	Email        string             `bson:"email"`
+	Phone        string             `bson:"phone"`
+	Birthday     string             `bson:"birthday"`
+	PhotoSticker string             `bson:"photoSticker"`
+	Messages     map[string]string  `bson:"messages"`
+	Medication   []string           `bson:"medication"`
 }
 
 func CreatePatient(db *mongo.Client, p Patient) error {
@@ -32,8 +36,12 @@ func CreatePatient(db *mongo.Client, p Patient) error {
 func GetPatient(db *mongo.Client, id string) (*Patient, error) {
 	var patient Patient
 	collection := db.Database(config.MongodbDatabase).Collection("patients")
-
-	err := collection.FindOne(context.TODO(), bson.M{"_id": id}).Decode(&patient)
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error converting ID %s to ObjectID: %v", id, err)
+		return nil, err
+	}
+	err = collection.FindOne(context.TODO(), bson.M{"_id": objID}).Decode(&patient)
 	if err != nil {
 		log.Printf("Error finding patient with ID %s: %v", id, err)
 		return nil, err
