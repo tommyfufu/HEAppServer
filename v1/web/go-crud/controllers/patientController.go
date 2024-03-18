@@ -38,7 +38,7 @@ func GetPatient(db *mongo.Client) http.HandlerFunc {
 			http.Error(w, "Patient not found", http.StatusNotFound)
 			return
 		}
-
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(patient)
 	}
 }
@@ -50,7 +50,7 @@ func GetAllPatients(db *mongo.Client) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(patients)
 	}
 }
@@ -70,7 +70,7 @@ func UpdatePatient(mysqldb *sql.DB, db *mongo.Client) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
+		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(patient)
 	}
 }
@@ -84,7 +84,7 @@ func DeletePatient(mysqldb *sql.DB, db *mongo.Client) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusNoContent) // No content to return upon successful deletion
 	}
 }
