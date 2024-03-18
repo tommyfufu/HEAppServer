@@ -1,9 +1,9 @@
 <?php
 
     $servername = "database";
-    $username = "rtes913";
-    $password = "MYSQLrtes913"; //docker-compose env
-    $dbname = "HEdb";
+    $username = getenv('MYSQL_USER');
+    $password = getenv('MYSQL_PASSWORD'); //docker-compose env
+    $dbname = getenv('MYSQL_DATABASE');
 
     $connDB = new mysqli($servername, $username, $password, $dbname);
 
