@@ -20,4 +20,8 @@ export class PatientProfileComponent implements OnInit {
       this.selectedPatient = patient;
     });
   }
+
+  getMessagesArray(messages: Record<string, string>): {date: string, content: string}[] {
+    return Object.entries(messages).map(([date, content]) => ({date, content}));
+  }
 }

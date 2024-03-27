@@ -75,6 +75,40 @@ func UpdatePatient(mysqldb *sql.DB, db *mongo.Client) http.HandlerFunc {
 	}
 }
 
+type MedicationUpdate struct {
+	Medication []string `json:"medication"`
+}
+
+func UpdatePatientMedication(mysqldb *sql.DB, db *mongo.Client) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+
+		var medUpdate MedicationUpdate
+		if err := json.NewDecoder(r.Body).Decode(&medUpdate); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		// Preprocessing on the front end, no need to process like below
+		// Convert string ID to MongoDB ObjectID
+		// objID, err := primitive.ObjectIDFromHex(id)
+		// if err != nil {
+		// 	http.Error(w, "Invalid patient ID", http.StatusBadRequest)
+		// 	return
+		// }
+
+		if err := models.UpdatePatientMedication(db, id, medUpdate.Medication); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+
+		json.NewEncoder(w).Encode(medUpdate.Medication)
+	}
+}
+
 func DeletePatient(mysqldb *sql.DB, db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)

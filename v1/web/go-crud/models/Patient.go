@@ -93,6 +93,21 @@ func UpdatePatient(db *mongo.Client, id string, p Patient) error {
 	return nil
 }
 
+func UpdatePatientMedication(db *mongo.Client, id string, medication []string) error {
+	collection := db.Database(config.MongodbDatabase).Collection("patients")
+
+	update := bson.M{
+        "$set": bson.M{"medication": medication},
+    }
+	_, err := collection.UpdateOne(context.TODO(), bson.M{"_id": id}, update)
+	if err != nil {
+		log.Printf("Error updating patient with ID %s: %v", id, err)
+		return err
+	}
+
+	return nil
+}
+
 func DeletePatient(db *mongo.Client, id string) error {
 	collection := db.Database(config.MongodbDatabase).Collection("patients")
 

@@ -24,6 +24,7 @@ func SetupRoutes(appUserDB *sql.DB, webUserDB *mongo.Client) *mux.Router {
 	r.HandleFunc("/patients", controllers.GetAllPatients(webUserDB)).Methods("GET") // For reading all patients
 	r.HandleFunc("/patient/{id}", controllers.GetPatient(webUserDB)).Methods("GET")
 	r.HandleFunc("/patient/{id}", controllers.UpdatePatient(appUserDB, webUserDB)).Methods("PUT")
+	r.HandleFunc("/patient/{id}/medication", controllers.UpdatePatientMedication(appUserDB, webUserDB)).Methods("PATCH")
 	r.HandleFunc("/patient/{id}", controllers.DeletePatient(appUserDB, webUserDB)).Methods("DELETE")
 
 	return r
