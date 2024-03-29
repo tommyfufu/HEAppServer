@@ -22,24 +22,35 @@ export class ApiService {
       .get<Patient>(`${this.baseUrl}/patient/${patientID}`)
       .pipe(catchError(this.handleError));
   }
-  
+
   getMessagesForPatient(patientID: string): Observable<Record<string, string>> {
     return this.http.get<Patient>(`${this.baseUrl}/patient/${patientID}`).pipe(
       map((patient) => patient.Messages),
       catchError(this.handleError)
     );
   }
-  // Method to update a patient's information
+  // update a patient's information
   updatePatient(patientID: string, patientData: Patient): Observable<Patient> {
-    return this.http.put<Patient>(`${this.baseUrl}/patient/${patientID}`, patientData)
+    return this.http
+      .patch<Patient>(`${this.baseUrl}/patient/${patientID}`, patientData)
       .pipe(catchError(this.handleError));
   }
 
-  // Method to add a new medication entry for a patient
-  addMedicationForPatient(patientID: string, medication: string[]): Observable<Patient> {
-    // Assuming the backend expects the medication array under a "medication" property
-    const updatePayload = { medication };
-    return this.http.patch<Patient>(`${this.baseUrl}/patient/${patientID}/medication`, updatePayload)
+  // add a new text filed as medication entry for a patient
+  addMedicationForPatient(
+    patientID: string,
+    medication: string[]
+  ): Observable<Patient> {
+
+    const payload = {
+      medication: medication,
+    };
+
+    return this.http
+      .patch<Patient>(
+        `${this.baseUrl}/patient/${patientID}/medication`,
+        payload
+      )
       .pipe(catchError(this.handleError));
   }
 

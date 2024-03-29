@@ -96,10 +96,17 @@ func UpdatePatient(db *mongo.Client, id string, p Patient) error {
 func UpdatePatientMedication(db *mongo.Client, id string, medication []string) error {
 	collection := db.Database(config.MongodbDatabase).Collection("patients")
 
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error converting ID to ObjectID: %v", err)
+		return err
+	}
+
 	update := bson.M{
-        "$set": bson.M{"medication": medication},
-    }
-	_, err := collection.UpdateOne(context.TODO(), bson.M{"_id": id}, update)
+		"$set": bson.M{"medication": medication},
+	}
+	// Use the ObjectID for the query filter
+	_, err = collection.UpdateOne(context.TODO(), bson.M{"_id": objID}, update)
 	if err != nil {
 		log.Printf("Error updating patient with ID %s: %v", id, err)
 		return err

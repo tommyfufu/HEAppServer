@@ -92,6 +92,7 @@ export class MedicationEntryComponent implements OnInit {
         next: (updatedPatient) => {
           console.log('Updated patient medication:', updatedPatient);
           alert('Medication updated successfully!');
+          this.patientDataService.refreshCurrentPatient(); 
         },
         error: (error) => {
           console.error('Error updating medication:', error);

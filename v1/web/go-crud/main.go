@@ -23,12 +23,15 @@ func main() {
 	// setup router
 	r := routes.SetupRoutes(appUserDB, webUserDB)
 	// Setup CORS
-	corsOpts := handlers.AllowedOrigins([]string{"*"})
-	corsHandler := handlers.CORS(corsOpts)
+	corsOpts := handlers.CORS(
+		handlers.AllowedOrigins([]string{"http://127.0.0.1:4200", "http://localhost:4200"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "X-Requested-With", "Authorization"}),
+	)
 
 	// HTTP server
 	server := &http.Server{
-		Handler:      corsHandler(r),
+		Handler:      corsOpts(r),
 		Addr:         "127.0.0.1:8090",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,

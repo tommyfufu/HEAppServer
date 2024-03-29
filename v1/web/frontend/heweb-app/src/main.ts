@@ -5,6 +5,6 @@ import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    importProvidersFrom(HttpClientModule), // Correctly import HttpClientModule
+    importProvidersFrom(HttpClientModule), 
   ]
 }).catch(err => console.error(err));

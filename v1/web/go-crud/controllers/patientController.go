@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"go-crud/models"
+	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -85,27 +86,27 @@ func UpdatePatientMedication(mysqldb *sql.DB, db *mongo.Client) http.HandlerFunc
 		id := vars["id"]
 
 		var medUpdate MedicationUpdate
+		// Decode the entire JSON body into the medUpdate struct
 		if err := json.NewDecoder(r.Body).Decode(&medUpdate); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		// Preprocessing on the front end, no need to process like below
-		// Convert string ID to MongoDB ObjectID
-		// objID, err := primitive.ObjectIDFromHex(id)
-		// if err != nil {
-		// 	http.Error(w, "Invalid patient ID", http.StatusBadRequest)
-		// 	return
-		// }
+		log.Printf("Updating medication for patient %s with data: %v", id, medUpdate)
 
 		if err := models.UpdatePatientMedication(db, id, medUpdate.Medication); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
+		updatedPatient, err := models.GetPatient(db, id)
+		if err != nil {
+			http.Error(w, "Failed to fetch updated patient", http.StatusInternalServerError)
+			return
+		}
 
-		json.NewEncoder(w).Encode(medUpdate.Medication)
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(updatedPatient)
 	}
 }
 
@@ -119,6 +120,6 @@ func DeletePatient(mysqldb *sql.DB, db *mongo.Client) http.HandlerFunc {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusNoContent) // No content to return upon successful deletion
+		w.WriteHeader(http.StatusNoContent)
 	}
 }

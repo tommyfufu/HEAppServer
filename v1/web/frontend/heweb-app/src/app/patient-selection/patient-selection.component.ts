@@ -13,7 +13,7 @@ import { PatientDataService } from '../shared/patient-data.service';
 })
 export class PatientSelectionComponent implements OnInit {
   patients: Patient[] = [];
-  selectedPatientId: string | null = null; // Assuming patients have an ID
+  selectedPatientId: string | null = null; 
 
   constructor(
     private apiService: ApiService,
