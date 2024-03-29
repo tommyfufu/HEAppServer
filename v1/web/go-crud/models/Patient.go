@@ -105,7 +105,7 @@ func UpdatePatientMedication(db *mongo.Client, id string, medication []string) e
 	update := bson.M{
 		"$set": bson.M{"medication": medication},
 	}
-	// Use the ObjectID for the query filter
+
 	_, err = collection.UpdateOne(context.TODO(), bson.M{"_id": objID}, update)
 	if err != nil {
 		log.Printf("Error updating patient with ID %s: %v", id, err)
