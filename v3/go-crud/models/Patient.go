@@ -12,16 +12,16 @@ import (
 )
 
 type Patient struct {
-	ID           primitive.ObjectID `bson:"_id,omitempty"`
-	Name         string             `bson:"name"`
-	Email        string             `bson:"email"`
-	Phone        string             `bson:"phone"`
-	Birthday     string             `bson:"birthday"`
-	Gender       string             `bson:"gender"`
-	Watchsn      string             `bson:"watchsn"`
-	PhotoSticker string             `bson:"photoSticker"`
-	Messages     map[string]string  `bson:"messages"`
-	Medication   []string           `bson:"medication"`
+	ID              primitive.ObjectID `bson:"_id,omitempty"`
+	Name            string             `bson:"name"`
+	Email           string             `bson:"email"`
+	Phone           string             `bson:"phone"`
+	Birthday        string             `bson:"birthday"`
+	Gender          string             `bson:"gender"`
+	AsusvivowatchSN string             `bson:"watchsn"` //Asus Vivowatch Serial Number
+	PhotoSticker    string             `bson:"photoSticker"`
+	Messages        map[string]string  `bson:"messages"`
+	Medication      []string           `bson:"medication"`
 }
 
 func CreatePatient(db *mongo.Client, p Patient) error {
