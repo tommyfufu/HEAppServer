@@ -1,12 +1,17 @@
 package controllers
 
 import (
+	"context"
 	"encoding/json"
+	"go-crud/config"
 	"go-crud/models"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -19,6 +24,11 @@ func CreatePatient(db *mongo.Client) http.HandlerFunc {
 		}
 
 		if err := models.CreatePatient(db, patient); err != nil {
+			// Check if the error is due to a duplicate key
+			if mongo.IsDuplicateKeyError(err) {
+				http.Error(w, "A patient with this email already exists.", http.StatusConflict)
+				return
+			}
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -30,15 +40,42 @@ func CreatePatient(db *mongo.Client) http.HandlerFunc {
 
 func GetPatient(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		vars := mux.Vars(r)
-		id := vars["id"]
+		var query bson.M
+		var patient models.Patient
+		collection := db.Database(config.MongodbDatabase).Collection("patients")
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
 
-		patient, err := models.GetPatient(db, id)
-		if err != nil {
-			http.Error(w, "Patient not found", http.StatusNotFound)
+		id := r.URL.Query().Get("id")
+		email := r.URL.Query().Get("email")
+		phone := r.URL.Query().Get("phone")
+
+		if id != "" {
+			objID, err := primitive.ObjectIDFromHex(id)
+			if err != nil {
+				http.Error(w, "Invalid ID format", http.StatusBadRequest)
+				return
+			}
+			query = bson.M{"_id": objID}
+		} else if email != "" {
+			query = bson.M{"email": email}
+		} else if phone != "" {
+			query = bson.M{"phone": phone}
+		} else {
+			http.Error(w, "No valid identifier provided", http.StatusBadRequest)
 			return
 		}
-		w.Header().Set("Content-Type", "application/json")
+
+		err := collection.FindOne(ctx, query).Decode(&patient)
+		if err != nil {
+			if err == mongo.ErrNoDocuments {
+				http.Error(w, "Patient not found", http.StatusNotFound)
+				return
+			}
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		json.NewEncoder(w).Encode(patient)
 	}
 }

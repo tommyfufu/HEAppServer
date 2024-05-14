@@ -11,18 +11,11 @@ import (
 )
 
 var (
-	// HEdb (MySQL), which is used to stroe HEApp users and records data.
-	mysqldbAddr = "X"
-	sqldbDriver = "X"
-	sqldbUser   = "X"
-	sqldbPass   = "X"
-	SqldbName   = "X"
-
 	// HEWebdb (MongoDB), which is used to store HEWeb users' information
-	mongodbAddr     = "X"
-	MongodbUser     = "X"
-	MongodbPass     = "X"
-	MongodbDatabase = "X"
+	mongodbAddr     = "140.113.151.61:27017"
+	MongodbUser     = "rtes913"
+	MongodbPass     = "MONGODBrtes913"
+	MongodbDatabase = "HEWEBdb"
 )
 
 func ConnectMongoDB() *mongo.Client {

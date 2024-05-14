@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type Patient struct {
@@ -18,10 +19,40 @@ type Patient struct {
 	Phone           string             `bson:"phone"`
 	Birthday        string             `bson:"birthday"`
 	Gender          string             `bson:"gender"`
-	AsusvivowatchSN string             `bson:"watchsn"` //Asus Vivowatch Serial Number
-	PhotoSticker    string             `bson:"photoSticker"`
+	AsusvivowatchSN string             `bson:"asusvivowatchsn"` //Asus Vivowatch Serial Number
+	PhotoSticker    string             `bson:"photosticker"`
 	Messages        map[string]string  `bson:"messages"`
 	Medication      []string           `bson:"medication"`
+}
+
+func InitPatientIndexes(db *mongo.Client) error {
+	collection := db.Database(config.MongodbDatabase).Collection("patients")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	// Index for the email field
+	emailIndexModel := mongo.IndexModel{
+		Keys:    bson.M{"email": 1}, // Index in ascending order
+		Options: options.Index().SetUnique(true),
+	}
+	_, err := collection.Indexes().CreateOne(ctx, emailIndexModel)
+	if err != nil {
+		log.Printf("Error creating unique index on email in patients collection: %v", err)
+		return err
+	}
+
+	// Index for the phone field
+	phoneIndexModel := mongo.IndexModel{
+		Keys:    bson.M{"phone": 1}, // Index in ascending order
+		Options: options.Index().SetUnique(true),
+	}
+	_, err = collection.Indexes().CreateOne(ctx, phoneIndexModel)
+	if err != nil {
+		log.Printf("Error creating unique index on phone in patients collection: %v", err)
+		return err
+	}
+
+	return nil
 }
 
 func CreatePatient(db *mongo.Client, p Patient) error {

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	config "go-crud/config"
+	"go-crud/models"
 	"go-crud/routes"
 
 	"github.com/gorilla/handlers"
@@ -16,7 +17,14 @@ func main() {
 
 	// delcare Database
 	HEDB := config.ConnectMongoDB()
-	defer HEDB.Disconnect(context.TODO())
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	defer HEDB.Disconnect(ctx)
+
+	// Initialize indexes for Patients collection
+	if err := models.InitPatientIndexes(HEDB); err != nil {
+		log.Fatalf("Failed to initialize patient indexes: %v", err)
+	}
 
 	// setup router
 	r := routes.SetupRoutes(HEDB)
@@ -30,7 +38,7 @@ func main() {
 	// HTTP server
 	server := &http.Server{
 		Handler:      corsOpts(r),
-		Addr:         "127.0.0.1:8090",
+		Addr:         "140.113.174.44:8090",
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
 	}

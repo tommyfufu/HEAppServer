@@ -21,7 +21,7 @@ func SetupRoutes(db *mongo.Client) *mux.Router {
 	// Patient routes
 	r.HandleFunc("/patient", controllers.CreatePatient(db)).Methods("POST")
 	r.HandleFunc("/patients", controllers.GetAllPatients(db)).Methods("GET") // For reading all patients
-	r.HandleFunc("/patient/{id}", controllers.GetPatient(db)).Methods("GET")
+	r.HandleFunc("/patient", controllers.GetPatient(db)).Methods("GET")      // query-based, since may use id, phone or email
 	r.HandleFunc("/patient/{id}", controllers.UpdatePatient(db)).Methods("PUT")
 	r.HandleFunc("/patient/{id}/medication", controllers.UpdatePatientMedication(db)).Methods("PATCH")
 	r.HandleFunc("/patient/{id}", controllers.DeletePatient(db)).Methods("DELETE")
