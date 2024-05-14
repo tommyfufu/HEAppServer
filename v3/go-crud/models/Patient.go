@@ -22,7 +22,13 @@ type Patient struct {
 	AsusvivowatchSN string             `bson:"asusvivowatchsn"` //Asus Vivowatch Serial Number
 	PhotoSticker    string             `bson:"photosticker"`
 	Messages        map[string]string  `bson:"messages"`
-	Medication      []string           `bson:"medication"`
+	Medications     []MedicationType   `bson:"medication"`
+}
+
+type MedicationType struct {
+	Name      string `bson:"name"`
+	Dosage    int    `bson:"dosage"`    // Number of pills
+	Frequency int    `bson:"frequency"` // Times per day
 }
 
 func InitPatientIndexes(db *mongo.Client) error {
@@ -136,7 +142,7 @@ func UpdatePatient(db *mongo.Client, id string, p Patient) error {
 	return nil
 }
 
-func UpdatePatientMedication(db *mongo.Client, id string, medication []string) error {
+func UpdatePatientMedication(db *mongo.Client, id string, medications []MedicationType) error {
 	collection := db.Database(config.MongodbDatabase).Collection("patients")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -147,7 +153,7 @@ func UpdatePatientMedication(db *mongo.Client, id string, medication []string) e
 		return err
 	}
 
-	update := bson.M{"$set": bson.M{"medication": medication}}
+	update := bson.M{"$set": bson.M{"medication": medications}}
 	_, err = collection.UpdateOne(ctx, bson.M{"_id": objID}, update)
 	if err != nil {
 		log.Printf("Error updating patient with ID %s: %v", id, err)

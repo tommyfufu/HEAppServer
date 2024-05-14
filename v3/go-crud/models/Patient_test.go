@@ -207,7 +207,7 @@ var TestUsePatientsData = []Patient{
 		Birthday:     "1980-04-12",
 		PhotoSticker: "SomeBase64OrHexEncodedPhoto",
 		Messages:     map[string]string{"2024-03-11 17:00:00": "Hello", "2024-03-10 07:00:00": "World"},
-		Medication:   []string{"Med1", "Med2"},
+		// Medications:  []string{["Med1", ], "Med2"},
 	},
 	{
 		Name:         "Jane Doe",
@@ -216,7 +216,7 @@ var TestUsePatientsData = []Patient{
 		Birthday:     "1985-05-15",
 		PhotoSticker: "SomeBase64OrHexEncodedPhoto",
 		Messages:     map[string]string{"2024-03-12 09:00:00": "Good morning", "2024-03-11 20:00:00": "Good night"},
-		Medication:   []string{"Med3", "Med4"},
+		// Medications:  []string{"Med3", "Med4"},
 	},
 	{
 		Name:         "Alice Johnson",
@@ -225,7 +225,7 @@ var TestUsePatientsData = []Patient{
 		Birthday:     "1990-07-22",
 		PhotoSticker: "SomeBase64OrHexEncodedPhoto",
 		Messages:     map[string]string{"2024-03-13 12:00:00": "Lunch?", "2024-03-12 18:00:00": "Dinner"},
-		Medication:   []string{"Med5", "Med6"},
+		// Medications:  []string{"Med5", "Med6"},
 	},
 	{
 		Name:         "Bob Smith",
@@ -234,7 +234,7 @@ var TestUsePatientsData = []Patient{
 		Birthday:     "1975-02-28",
 		PhotoSticker: "SomeBase64OrHexEncodedPhoto",
 		Messages:     map[string]string{"2024-03-14 10:00:00": "Meeting at 10", "2024-03-13 15:00:00": "Coffee break"},
-		Medication:   []string{"Med7", "Med8"},
+		// Medications:  []string{"Med7", "Med8"},
 	},
 	{
 		Name:         "Charlie Brown",
@@ -243,6 +243,6 @@ var TestUsePatientsData = []Patient{
 		Birthday:     "1988-09-17",
 		PhotoSticker: "SomeBase64OrHexEncodedPhoto",
 		Messages:     map[string]string{"2024-03-15 08:00:00": "Workout?", "2024-03-14 22:00:00": "Late snack"},
-		Medication:   []string{"Med9", "Med10"},
+		// Medications:  []string{"Med9", "Med10"},
 	},
 }

@@ -113,7 +113,7 @@ func UpdatePatient(db *mongo.Client) http.HandlerFunc {
 }
 
 type MedicationUpdate struct {
-	Medication []string `json:"medication"`
+	Medication []models.MedicationType `json:"medication"`
 }
 
 func UpdatePatientMedication(db *mongo.Client) http.HandlerFunc {
