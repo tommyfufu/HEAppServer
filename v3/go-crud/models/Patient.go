@@ -127,6 +127,28 @@ func GetAllPatients(db *mongo.Client) ([]Patient, error) {
 	return patients, nil
 }
 
+func GetPatientMedication(db *mongo.Client, id string) (*Patient, error) {
+	var patient Patient
+	collection := db.Database(config.MongodbDatabase).Collection("patients")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error converting ID %s to ObjectID: %v", id, err)
+		return nil, err
+	}
+
+	fields := bson.M{"medication": 1} // Fetch only the medication field
+	err = collection.FindOne(ctx, bson.M{"_id": objID}, options.FindOne().SetProjection(fields)).Decode(&patient)
+	if err != nil {
+		log.Printf("Error finding medication for patient with ID %s: %v", id, err)
+		return nil, err
+	}
+
+	return &patient, nil
+}
+
 func UpdatePatient(db *mongo.Client, id string, p Patient) error {
 	collection := db.Database(config.MongodbDatabase).Collection("patients")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

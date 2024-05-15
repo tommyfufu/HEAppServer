@@ -92,6 +92,22 @@ func GetAllPatients(db *mongo.Client) http.HandlerFunc {
 	}
 }
 
+func GetPatientMedication(db *mongo.Client) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+
+		patient, err := models.GetPatientMedication(db, id)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(patient.Medications)
+	}
+}
+
 func UpdatePatient(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
