@@ -122,8 +122,8 @@ func UpdatePatientMedication(db *mongo.Client) http.HandlerFunc {
 		id := vars["id"]
 
 		var medUpdate MedicationUpdate
-		// Decode the entire JSON body into the medUpdate struct
 		if err := json.NewDecoder(r.Body).Decode(&medUpdate); err != nil {
+			log.Printf("Error decoding medication update: %v", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -131,12 +131,14 @@ func UpdatePatientMedication(db *mongo.Client) http.HandlerFunc {
 		log.Printf("Updating medication for patient %s with data: %v", id, medUpdate)
 
 		if err := models.UpdatePatientMedication(db, id, medUpdate.Medication); err != nil {
+			log.Printf("Error updating medication: %v", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		updatedPatient, err := models.GetPatient(db, id)
 		if err != nil {
+			log.Printf("Error fetching updated patient: %v", err)
 			http.Error(w, "Failed to fetch updated patient", http.StatusInternalServerError)
 			return
 		}
