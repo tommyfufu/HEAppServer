@@ -27,8 +27,8 @@ type Patient struct {
 
 type MedicationType struct {
 	Name      string `bson:"name"`
-	Dosage    int    `bson:"dosage"`    // Number of pills
-	Frequency int    `bson:"frequency"` // Times per day
+	Dosage    string `bson:"dosage"`    // Number of pills
+	Frequency string `bson:"frequency"` // Times per day
 }
 
 func InitPatientIndexes(db *mongo.Client) error {
