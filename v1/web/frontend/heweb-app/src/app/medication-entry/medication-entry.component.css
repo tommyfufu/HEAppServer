@@ -1,0 +1,28 @@
+.medication-entry {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .medication-entry input[type="text"], 
+  .medication-entry input[type="number"] {
+    margin-right: 10px;
+    padding: 5px;
+    width: 200px;
+  }
+  
+  button {
+    margin-top: 5px;
+    padding: 5px 10px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button[type="submit"] {
+    background-color: #28a745;
+  }
+  

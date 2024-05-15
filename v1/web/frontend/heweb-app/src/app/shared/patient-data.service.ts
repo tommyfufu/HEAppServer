@@ -20,12 +20,12 @@ export class PatientDataService {
     this.selectedPatientSource.next(patient);
     this.currentPatientId = patient.ID;
     this.selectedPatientIdSource.next(patient.ID);
+    this.refreshCurrentPatient(); // Refresh data immediately after selection
   }
 
   selectPatientById(patientId: string): void {
-    this.selectedPatientIdSource.next(patientId);
-    this.currentPatientId = patientId; 
-    this.refreshCurrentPatient(); 
+    this.currentPatientId = patientId;
+    this.refreshCurrentPatient(); // Always refresh when selecting by ID
   }
 
   getCurrentPatientId(): string | null {
@@ -34,11 +34,12 @@ export class PatientDataService {
 
   refreshCurrentPatient(): void {
     if (this.currentPatientId) {
-      this.apiService
-        .getPatient(this.currentPatientId)
-        .subscribe((updatedPatient) => {
-          this.selectPatient(updatedPatient);
-        });
+      this.apiService.getPatient({id: this.currentPatientId}).subscribe({
+        next: (updatedPatient) => {
+          this.selectedPatientSource.next(updatedPatient); // Update with fresh data
+        },
+        error: (error) => console.error('Error fetching patient data', error)
+      });
     }
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { PatientDataService } from '../shared/patient-data.service';
 import { Patient } from '../models/patient.model';
 
@@ -8,7 +8,7 @@ import { Patient } from '../models/patient.model';
   templateUrl: './patient-profile.component.html',
   styleUrls: ['./patient-profile.component.css'],
   standalone: true,
-  imports: [CommonModule,],
+  imports: [CommonModule],
 })
 export class PatientProfileComponent implements OnInit {
   selectedPatient: Patient | null = null;
@@ -16,12 +16,15 @@ export class PatientProfileComponent implements OnInit {
   constructor(private patientDataService: PatientDataService) {}
 
   ngOnInit(): void {
-    this.patientDataService.selectedPatient$.subscribe(patient => {
+    this.patientDataService.selectedPatient$.subscribe((patient) => {
       this.selectedPatient = patient;
     });
   }
 
-  getMessagesArray(messages: Record<string, string>): {date: string, content: string}[] {
-    return Object.entries(messages).map(([date, content]) => ({date, content}));
+  getMessagesArray(
+    messages: Record<string, string> | null | undefined
+  ): Array<[string, string]> {
+    if (!messages) return [];
+    return Object.entries(messages);
   }
 }

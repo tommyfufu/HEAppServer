@@ -7,11 +7,11 @@
     <h3>留言</h3>
     <ul>
       <li *ngFor="let message of getMessagesArray(selectedPatient.Messages)">
-        {{ message.date }}: <strong>{{ message.content }}</strong>
+        {{ message[0] }}: <strong>{{ message[1] }}</strong>
       </li>
     </ul>
   </div>
-  <p>Medication: {{ selectedPatient.Medication }}</p>
+  <p>Medication: {{ selectedPatient.Medications }}</p>
   <h3>需服藥品</h3>
 </div>
 
