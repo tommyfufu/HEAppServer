@@ -138,6 +138,7 @@ func UpdatePatientMedication(db *mongo.Client) http.HandlerFunc {
 		id := vars["id"]
 
 		var medUpdate MedicationUpdate
+
 		if err := json.NewDecoder(r.Body).Decode(&medUpdate); err != nil {
 			log.Printf("Error decoding medication update: %v", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)

@@ -29,6 +29,7 @@ type MedicationType struct {
 	Name      string `bson:"name"`
 	Dosage    int    `bson:"dosage"`    // Number of pills
 	Frequency int    `bson:"frequency"` // Times per day
+	IsTaken   bool   `bson:"isTaken"`
 }
 
 func InitPatientIndexes(db *mongo.Client) error {
