@@ -17,6 +17,7 @@ import (
 
 func CreatePatient(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+
 		var patient models.Patient
 		if err := json.NewDecoder(r.Body).Decode(&patient); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
@@ -32,7 +33,7 @@ func CreatePatient(db *mongo.Client) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(patient)
 	}
@@ -75,7 +76,7 @@ func GetPatient(db *mongo.Client) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		json.NewEncoder(w).Encode(patient)
 	}
 }
@@ -87,7 +88,7 @@ func GetAllPatients(db *mongo.Client) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		json.NewEncoder(w).Encode(patients)
 	}
 }
@@ -103,7 +104,7 @@ func GetPatientMedication(db *mongo.Client) http.HandlerFunc {
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		json.NewEncoder(w).Encode(patient.Medications)
 	}
 }
@@ -123,7 +124,7 @@ func UpdatePatient(db *mongo.Client) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		json.NewEncoder(w).Encode(patient)
 	}
 }
@@ -160,7 +161,7 @@ func UpdatePatientMedication(db *mongo.Client) http.HandlerFunc {
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		json.NewEncoder(w).Encode(updatedPatient)
 	}
 }
