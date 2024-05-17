@@ -188,7 +188,7 @@ func AddPatientMessage(db *mongo.Client) http.HandlerFunc {
 		id := vars["id"]
 
 		var message struct {
-			Text string `json:"message"`
+			Text string `json:"Message"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&message); err != nil {
 			http.Error(w, "Bad request: "+err.Error(), http.StatusBadRequest)
