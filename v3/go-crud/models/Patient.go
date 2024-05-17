@@ -13,23 +13,28 @@ import (
 )
 
 type Patient struct {
-	ID              primitive.ObjectID `bson:"_id,omitempty"`
-	Name            string             `bson:"name"`
-	Email           string             `bson:"email"`
-	Phone           string             `bson:"phone"`
-	Birthday        string             `bson:"birthday"`
-	Gender          string             `bson:"gender"`
-	AsusvivowatchSN string             `bson:"asusvivowatchsn"` //Asus Vivowatch Serial Number
-	PhotoSticker    string             `bson:"photosticker"`
-	Messages        map[string]string  `bson:"messages"`
-	Medications     []MedicationType   `bson:"medication"`
+	ID              primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Name            string             `bson:"name" json:"name"`
+	Email           string             `bson:"email" json:"email"`
+	Phone           string             `bson:"phone" json:"phone"`
+	Birthday        string             `bson:"birthday" json:"birthday"`
+	Gender          string             `bson:"gender" json:"gender"`
+	AsusvivowatchSN string             `bson:"asusvivowatchsn" json:"asusvivowatchsn"`
+	PhotoSticker    string             `bson:"photosticker" json:"photosticker"`
+	Messages        []Message          `bson:"messages" json:"messages"`
+	Medications     []MedicationType   `bson:"medication" json:"medications"`
+}
+
+type Message struct {
+	Text string `bson:"text" json:"message"`
+	Date string `bson:"date" json:"date"`
 }
 
 type MedicationType struct {
-	Name      string `bson:"name"`
-	Dosage    int    `bson:"dosage"`    // Number of pills
-	Frequency int    `bson:"frequency"` // Times per day
-	IsTaken   bool   `bson:"isTaken"`
+	Name      string `bson:"name" json:"Name"`
+	Dosage    int    `bson:"dosage" json:"Dosage"`
+	Frequency int    `bson:"frequency" json:"Frequency"`
+	IsTaken   bool   `bson:"isTaken" json:"IsTaken"`
 }
 
 func InitPatientIndexes(db *mongo.Client) error {
