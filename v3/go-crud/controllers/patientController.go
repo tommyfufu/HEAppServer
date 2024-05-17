@@ -193,13 +193,12 @@ func AddPatientMessage(db *mongo.Client) http.HandlerFunc {
 			return
 		}
 
-		// Generate a timestamp key for the message
-		timestamp := time.Now().Format(time.RFC3339) // Or another format if desired
+		// Set the current timestamp in a human-readable format (TW timezone)
+		loc, _ := time.LoadLocation("Asia/Taipei")
+		message.Date = time.Now().In(loc).Format("2006-01-02 15:04")
 
 		update := bson.M{
-			"$set": bson.M{
-				"messages." + timestamp: message.Text,
-			},
+			"$push": bson.M{"messages": message},
 		}
 
 		err := models.UpdatePatientField(db, id, update)
