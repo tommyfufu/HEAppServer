@@ -109,6 +109,22 @@ func GetPatientMedication(db *mongo.Client) http.HandlerFunc {
 	}
 }
 
+func GetPatientMessages(db *mongo.Client) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+
+		patient, err := models.GetPatient(db, id)
+		if err != nil {
+			http.Error(w, "Failed to fetch patient: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		json.NewEncoder(w).Encode(patient.Messages)
+	}
+}
+
 func UpdatePatient(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -166,6 +182,38 @@ func UpdatePatientMedication(db *mongo.Client) http.HandlerFunc {
 	}
 }
 
+func AddPatientMessage(db *mongo.Client) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+
+		var message struct {
+			Text string `json:"message"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&message); err != nil {
+			http.Error(w, "Bad request: "+err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		// Generate a timestamp key for the message
+		timestamp := time.Now().Format(time.RFC3339) // Or another format if desired
+
+		update := bson.M{
+			"$set": bson.M{
+				"messages." + timestamp: message.Text,
+			},
+		}
+
+		err := models.UpdatePatientField(db, id, update)
+		if err != nil {
+			http.Error(w, "Failed to update messages: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusNoContent) // No content to return, indicating successful operation
+	}
+}
+
 func DeletePatient(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
@@ -175,7 +223,7 @@ func DeletePatient(db *mongo.Client) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusNoContent)
 	}
 }

@@ -186,6 +186,26 @@ func UpdatePatientMedication(db *mongo.Client, id string, medications []Medicati
 	return nil
 }
 
+func UpdatePatientField(db *mongo.Client, id string, update bson.M) error {
+	collection := db.Database(config.MongodbDatabase).Collection("patients")
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error converting ID to ObjectID: %v", err)
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objID}, update)
+	if err != nil {
+		log.Printf("Error updating patient with ID %s: %v", id, err)
+		return err
+	}
+
+	return nil
+}
+
 func DeletePatient(db *mongo.Client, id string) error {
 	collection := db.Database(config.MongodbDatabase).Collection("patients")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

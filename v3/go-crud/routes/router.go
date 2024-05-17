@@ -25,6 +25,8 @@ func SetupRoutes(db *mongo.Client) *mux.Router {
 	r.HandleFunc("/patient/{id}", controllers.UpdatePatient(db)).Methods("PUT")
 	r.HandleFunc("/patient/{id}/medication", controllers.UpdatePatientMedication(db)).Methods("PATCH")
 	r.HandleFunc("/patient/{id}/medication", controllers.GetPatientMedication(db)).Methods("GET")
+	r.HandleFunc("/patient/{id}/messages", controllers.GetPatientMessages(db)).Methods("GET")
+	r.HandleFunc("/patient/{id}/message", controllers.AddPatientMessage(db)).Methods("POST")
 	r.HandleFunc("/patient/{id}", controllers.DeletePatient(db)).Methods("DELETE")
 
 	// Record routes
