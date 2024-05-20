@@ -13,7 +13,7 @@ import { PatientDataService } from '../shared/patient-data.service';
 })
 export class PatientSelectionComponent implements OnInit {
   patients: Patient[] = [];
-  selectedPatientId: string | null = null; 
+  selectedPatientId: string | null = null;
 
   constructor(
     private apiService: ApiService,
@@ -40,12 +40,14 @@ export class PatientSelectionComponent implements OnInit {
   onPatientSelect(event: Event): void {
     const target = event.target as HTMLSelectElement;
     const patientId = target.value;
-
+    console.log("Selected patient ID:", patientId); 
     const selectedPatient = this.patients.find(
-      (patient) => patient.ID === patientId
+      (patient) => patient._id === patientId
     );
+    console.log("Selected Patient:", selectedPatient);
     if (selectedPatient) {
       this.patientDataService.selectPatient(selectedPatient);
     }
+    // console.log('onPatientSelect: ' + selectedPatient?.name);
   }
 }

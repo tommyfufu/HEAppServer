@@ -1,17 +1,24 @@
+export interface Message {
+  message: string;
+  date: string;
+}
+
 export interface Medication {
-  Name: string;
-  Dosage: number;
-  Frequency: number;
+  name: string;
+  dosage: number;
+  frequency: number;
+  isTaken: boolean;
 }
 
 export interface Patient {
-  ID: string;
-  Name: string;
-  Email: string;
-  Phone: string;
-  Birthday: string;
-  Gender: string;
-  PhotoSticker: string;
-  Messages: Record<string, string>;
-  Medications: Medication[];
+  _id: string;        // Corresponds to "_id" from MongoDB but is used as 'id' in TypeScript
+  name: string;
+  email: string;
+  phone: string;
+  birthday: string;
+  gender: string;
+  asusvivowatchsn: string;
+  photosticker: string;
+  messages: Message[];
+  medications: Medication[];
 }

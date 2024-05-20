@@ -1,17 +1,17 @@
 <div *ngIf="selectedPatient; else noSelection">
-  <h2>{{ selectedPatient.Name }}</h2>
-  <p>Email: {{ selectedPatient.Email }}</p>
-  <p>電話: {{ selectedPatient.Phone }}</p>
-  <p>生日: {{ selectedPatient.Birthday }}</p>
+  <h2>{{ selectedPatient.name }}</h2>
+  <p>Email: {{ selectedPatient.email }}</p>
+  <p>電話: {{ selectedPatient.phone }}</p>
+  <p>生日: {{ selectedPatient.birthday }}</p>
   <div class="bulletin-board">
     <h3>留言</h3>
     <ul>
-      <li *ngFor="let message of getMessagesArray(selectedPatient.Messages)">
-        {{ message[0] }}: <strong>{{ message[1] }}</strong>
+      <li *ngFor="let message of getMessages()">
+        {{ message.date }}: <strong>{{ message.message }}</strong>
       </li>
     </ul>
   </div>
-  <p>Medication: {{ selectedPatient.Medications }}</p>
+  <p>Medication: {{ selectedPatient.medications }}</p>
   <h3>需服藥品</h3>
 </div>
 

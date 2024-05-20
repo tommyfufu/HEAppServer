@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { Patient, Medication } from './models/patient.model';
+import { Patient, Medication, Message } from './models/patient.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,16 +14,16 @@ export class ApiService {
   getPatients(): Observable<Patient[]> {
     return this.http
       .get<Patient[]>(`${this.baseUrl}/patients`, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
       })
       .pipe(catchError(this.handleError));
   }
 
-  getPatientById(patientID: string): Observable<Patient> {
-    return this.http
-      .get<Patient>(`${this.baseUrl}/patient?id=${patientID}`)
-      .pipe(catchError(this.handleError));
-  }
+  // getPatientById(patientID: string): Observable<Patient> {
+  //   return this.http
+  //     .get<Patient>(`${this.baseUrl}/patient?id=${patientID}`)
+  //     .pipe(catchError(this.handleError));
+  // }
 
   // Extended method in Angular service for HEApp
   getPatient(params: {
@@ -37,13 +37,13 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
-  getMessagesForPatient(patientID: string): Observable<Record<string, string>> {
+  getMessagesForPatient(patientID: string): Observable<Message[]> {
     return this.http
       .get<Patient>(`${this.baseUrl}/patient/${patientID}`, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
       })
       .pipe(
-        map((patient) => patient.Messages),
+        map((patient) => patient.messages),
         catchError(this.handleError)
       );
   }
@@ -51,7 +51,7 @@ export class ApiService {
   updatePatient(patientID: string, patientData: Patient): Observable<Patient> {
     return this.http
       .patch<Patient>(`${this.baseUrl}/patient/${patientID}`, patientData, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
       })
       .pipe(catchError(this.handleError));
   }
@@ -67,7 +67,7 @@ export class ApiService {
       .patch<Patient>(
         `${this.baseUrl}/patient/${patientID}/medication`,
         payload,
-        { headers: { 'Content-Type': 'application/json' } }
+        { headers: { 'Content-Type': 'application/json; charset=UTF-8' } }
       )
       .pipe(catchError(this.handleError));
   }

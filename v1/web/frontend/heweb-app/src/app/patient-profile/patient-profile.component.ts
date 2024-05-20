@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PatientDataService } from '../shared/patient-data.service';
-import { Patient } from '../models/patient.model';
+import { Message, Patient } from '../models/patient.model';
 
 @Component({
   selector: 'app-patient-profile',
@@ -17,14 +17,12 @@ export class PatientProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.patientDataService.selectedPatient$.subscribe((patient) => {
+      console.log('Received patient data:', patient);
       this.selectedPatient = patient;
     });
   }
 
-  getMessagesArray(
-    messages: Record<string, string> | null | undefined
-  ): Array<[string, string]> {
-    if (!messages) return [];
-    return Object.entries(messages);
+  getMessages(): Message[] {
+    return this.selectedPatient?.messages || [];
   }
 }

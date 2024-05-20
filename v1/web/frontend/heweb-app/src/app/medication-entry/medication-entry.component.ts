@@ -38,7 +38,7 @@ export class MedicationEntryComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((patient) => {
         if (patient) {
-          this.initFormWithMedications(patient.Medications);
+          this.initFormWithMedications(patient.medications);
         } else {
           this.clearFormArray(this.medications);
         }
@@ -58,13 +58,12 @@ export class MedicationEntryComponent implements OnInit, OnDestroy {
     this.medications.clear();
     (medications || []).forEach(med => {
         this.medications.push(this.fb.group({
-            Name: [med.Name],
-            Dosage: [med.Dosage],
-            Frequency: [med.Frequency]
+            Name: [med.name],
+            Dosage: [med.dosage],
+            Frequency: [med.frequency]
         }));
     });
 }
-
 
   addMedicationField(): void {
     this.medications.push(
