@@ -31,10 +31,10 @@ type Message struct {
 }
 
 type MedicationType struct {
-	Name      string `bson:"name" json:"Name"`
-	Dosage    int    `bson:"dosage" json:"Dosage"`
-	Frequency int    `bson:"frequency" json:"Frequency"`
-	IsTaken   bool   `bson:"isTaken" json:"IsTaken"`
+	Name      string `bson:"name" json:"name"`
+	Dosage    int    `bson:"dosage" json:"dosage"`
+	Frequency int    `bson:"frequency" json:"frequency"`
+	IsTaken   bool   `bson:"istaken" json:"istaken"`
 }
 
 func InitPatientIndexes(db *mongo.Client) error {
