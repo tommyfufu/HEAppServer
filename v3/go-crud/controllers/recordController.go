@@ -13,7 +13,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// CreateRecord handles the creation of a new game record.
 func CreateRecord(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var record models.GameRecord
@@ -22,15 +21,25 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 			return
 		}
 
-		// Validate if user_id is provided and valid
-		if record.UserID.IsZero() {
-			http.Error(w, "User ID must be provided and valid", http.StatusBadRequest)
+		// Parse the user_id from the JSON body
+		var data struct {
+			UserID string `json:"user_id"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
+			http.Error(w, "Invalid or missing user ID", http.StatusBadRequest)
 			return
 		}
 
-		collection := db.Database(config.MongodbDatabase).Collection("records")
+		uid, err := primitive.ObjectIDFromHex(data.UserID)
+		if err != nil {
+			http.Error(w, "Invalid user ID format", http.StatusBadRequest)
+			return
+		}
+		record.UserID = uid
+
 		record.GameDateTime = time.Now() // Setting current time as gameDateTime
 
+		collection := db.Database(config.MongodbDatabase).Collection("records")
 		result, err := collection.InsertOne(r.Context(), record)
 		if err != nil {
 			http.Error(w, "Failed to create record: "+err.Error(), http.StatusInternalServerError)
@@ -38,7 +47,7 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusCreated) // Correctly reflect resource creation
+		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(result)
 	}
 }
