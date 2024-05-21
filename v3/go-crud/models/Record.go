@@ -12,16 +12,16 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Record struct {
-	ID           primitive.ObjectID `bson:"_id,omitempty"`
-	UserID       primitive.ObjectID `bson:"user_id"`
-	GameID       int                `bson:"game_id"`
-	GameDateTime string             `bson:"game_date_time"`
-	GameTime     string             `bson:"game_time"`
-	Score        int                `bson:"score"`
+type GameRecord struct {
+	ID           primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
+	UserID       primitive.ObjectID `bson:"user_id" json:"user_id"`
+	GameID       int                `bson:"game_id" json:"game_id"`
+	GameDateTime time.Time          `bson:"game_date_time" json:"game_date_time"`
+	GameTime     string             `bson:"game_time" json:"game_time"`
+	Score        int                `bson:"score" json:"score"`
 }
 
-// Initializes indexes for the records collection
+// InitRecordIndexes initializes indexes for the records collection
 func InitRecordIndexes(db *mongo.Client) error {
 	collection := db.Database(config.MongodbDatabase).Collection("records")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -29,7 +29,7 @@ func InitRecordIndexes(db *mongo.Client) error {
 
 	// Creating an index for the UserID field
 	indexModel := mongo.IndexModel{
-		Keys:    bson.M{"user_id": 1}, // Index in ascending order
+		Keys:    bson.D{{Key: "user_id", Value: 1}}, // Index in ascending order
 		Options: options.Index().SetUnique(false),
 	}
 
@@ -42,7 +42,8 @@ func InitRecordIndexes(db *mongo.Client) error {
 	return nil
 }
 
-func CreateRecord(db *mongo.Client, record Record) error {
+// CreateRecord inserts a new record into the records collection
+func CreateRecord(db *mongo.Client, record GameRecord) error {
 	collection := db.Database(config.MongodbDatabase).Collection("records")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -52,16 +53,12 @@ func CreateRecord(db *mongo.Client, record Record) error {
 		return err
 	}
 
-	if err := EnsureMaxRecords(db, record.UserID); err != nil {
-		log.Printf("Error enforcing max records limit: %v", err)
-		return err
-	}
-
 	return nil
 }
 
-func GetRecordsByUserID(db *mongo.Client, userID primitive.ObjectID) ([]Record, error) {
-	var records []Record
+// GetRecordsByUserID retrieves all records for a specific user from the records collection
+func GetRecordsByUserID(db *mongo.Client, userID primitive.ObjectID) ([]GameRecord, error) {
+	var records []GameRecord
 	collection := db.Database(config.MongodbDatabase).Collection("records")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
@@ -74,7 +71,7 @@ func GetRecordsByUserID(db *mongo.Client, userID primitive.ObjectID) ([]Record, 
 	defer cursor.Close(ctx)
 
 	for cursor.Next(ctx) {
-		var record Record
+		var record GameRecord
 		if err := cursor.Decode(&record); err != nil {
 			log.Printf("Error decoding record: %v", err)
 			return nil, err
@@ -90,6 +87,7 @@ func GetRecordsByUserID(db *mongo.Client, userID primitive.ObjectID) ([]Record, 
 	return records, nil
 }
 
+// DeleteRecord removes a record from the records collection based on its ID
 func DeleteRecord(db *mongo.Client, id string) error {
 	collection := db.Database(config.MongodbDatabase).Collection("records")
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -104,26 +102,6 @@ func DeleteRecord(db *mongo.Client, id string) error {
 	if _, err := collection.DeleteOne(ctx, bson.M{"_id": objID}); err != nil {
 		log.Printf("Error deleting record with ID %s: %v", id, err)
 		return err
-	}
-
-	return nil
-}
-
-func EnsureMaxRecords(db *mongo.Client, userID primitive.ObjectID) error {
-	collection := db.Database(config.MongodbDatabase).Collection("records")
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-
-	// Count the number of records for the user
-	count, err := collection.CountDocuments(ctx, bson.M{"user_id": userID})
-	if err != nil {
-		log.Printf("Error counting records for user with ID %s: %v", userID.Hex(), err)
-		return err
-	}
-
-	// If the number of records exceeds 20, delete the oldest record
-	if count > 20 {
-		collection.FindOneAndDelete(ctx, bson.M{"user_id": userID}, options.FindOneAndDelete().SetSort(bson.M{"game_date_time": 1}))
 	}
 
 	return nil
