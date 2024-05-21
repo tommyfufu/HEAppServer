@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"go-crud/config"
 	"go-crud/models"
+	"log"
 	"net/http"
 	"time"
 
@@ -36,9 +37,8 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 			return
 		}
 		record.UserID = uid
-
 		record.GameDateTime = time.Now() // Setting current time as gameDateTime
-
+		log.Printf("record.UserId: %v, record.GameDateTime: %v")
 		collection := db.Database(config.MongodbDatabase).Collection("records")
 		result, err := collection.InsertOne(r.Context(), record)
 		if err != nil {
