@@ -16,6 +16,8 @@ import (
 
 func CreateRecord(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		log.Println("Controller CreateRecord")
+
 		var record models.GameRecord
 		if err := json.NewDecoder(r.Body).Decode(&record); err != nil {
 			http.Error(w, "Invalid request body: "+err.Error(), http.StatusBadRequest)
