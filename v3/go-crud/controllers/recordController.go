@@ -18,7 +18,13 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var record models.GameRecord
 		if err := json.NewDecoder(r.Body).Decode(&record); err != nil {
-			http.Error(w, "Invalid request body", http.StatusBadRequest)
+			http.Error(w, "Invalid request body: "+err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		// Validate if user_id is provided and valid
+		if record.UserID.IsZero() {
+			http.Error(w, "User ID must be provided and valid", http.StatusBadRequest)
 			return
 		}
 
@@ -27,11 +33,12 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 
 		result, err := collection.InsertOne(r.Context(), record)
 		if err != nil {
-			http.Error(w, "Failed to create record", http.StatusInternalServerError)
+			http.Error(w, "Failed to create record: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated) // Correctly reflect resource creation
 		json.NewEncoder(w).Encode(result)
 	}
 }
