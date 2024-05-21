@@ -38,7 +38,7 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 		}
 		record.UserID = uid
 		record.GameDateTime = time.Now() // Setting current time as gameDateTime
-		log.Printf("record.UserId: %v, record.GameDateTime: %v")
+		log.Printf("record.UserId: %v, record.GameDateTime: %v", record.UserID, record.GameDateTime)
 		collection := db.Database(config.MongodbDatabase).Collection("records")
 		result, err := collection.InsertOne(r.Context(), record)
 		if err != nil {
