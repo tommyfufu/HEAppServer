@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"go-crud/config"
 	"go-crud/models"
 	"net/http"
@@ -16,7 +15,7 @@ import (
 
 func CreateRecord(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Controller CreateRecord")
+		// fmt.Println("Controller CreateRecord")
 
 		var record models.GameRecord
 		if err := json.NewDecoder(r.Body).Decode(&record); err != nil {
@@ -40,7 +39,7 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 		}
 		record.UserID = uid
 		record.GameDateTime = time.Now() // Setting current time as gameDateTime
-		fmt.Printf("record.UserId: %v, record.GameDateTime: %v", record.UserID, record.GameDateTime)
+		// fmt.Printf("record.UserId: %v, record.GameDateTime: %v", record.UserID, record.GameDateTime)
 		collection := db.Database(config.MongodbDatabase).Collection("records")
 		_, err = collection.InsertOne(r.Context(), record)
 		if err != nil {
@@ -48,7 +47,7 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(record)
 	}
