@@ -69,7 +69,7 @@ func GetRecordsByUserID(db *mongo.Client) http.HandlerFunc {
 		}
 
 		collection := db.Database(config.MongodbDatabase).Collection("records")
-		filter := bson.M{"userId": userID}
+		filter := bson.M{"user_id": userID}
 		cursor, err := collection.Find(r.Context(), filter)
 		if err != nil {
 			http.Error(w, "Failed to fetch records", http.StatusInternalServerError)
