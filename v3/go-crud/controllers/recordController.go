@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"go-crud/config"
 	"go-crud/models"
-	"log"
 	"net/http"
 	"time"
 
@@ -23,41 +22,35 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 			Score    int    `json:"score"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-			log.Printf("Error decoding request: %v", err)
 			http.Error(w, "Invalid request body: "+err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		// Validate the UserID and convert to ObjectID
 		uid, err := primitive.ObjectIDFromHex(input.UserID)
 		if err != nil {
-			log.Printf("Error converting UserID to ObjectID: %v", err)
 			http.Error(w, "Invalid user ID format", http.StatusBadRequest)
 			return
 		}
 
+		loc, _ := time.LoadLocation("Asia/Taipei")
+		formattedTime := time.Now().In(loc).Format("2006-01-02 15:04")
+
 		record := models.GameRecord{
 			UserID:       uid,
 			GameID:       input.GameID,
-			GameDateTime: time.Now(),
+			GameDateTime: formattedTime,
 			GameTime:     input.GameTime,
 			Score:        input.Score,
 		}
 
-		log.Printf("Attempting to create record with UserID: %s", record.UserID.Hex())
-
 		collection := db.Database(config.MongodbDatabase).Collection("records")
-		result, err := collection.InsertOne(r.Context(), record)
+		_, err = collection.InsertOne(r.Context(), record)
 		if err != nil {
-			log.Printf("Failed to insert record: %v", err)
 			http.Error(w, "Failed to create record: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		record.ID = result.InsertedID.(primitive.ObjectID)
-		log.Printf("Record created with ID: %s", record.ID.Hex())
-
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(record)
 	}

@@ -16,7 +16,7 @@ type GameRecord struct {
 	ID           primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
 	UserID       primitive.ObjectID `bson:"user_id" json:"userId"`
 	GameID       int                `bson:"game_id" json:"gameId"`
-	GameDateTime time.Time          `bson:"game_date_time" json:"gameDateTime"`
+	GameDateTime string             `bson:"game_date_time" json:"gameDateTime"`
 	GameTime     string             `bson:"game_time" json:"gameTime"`
 	Score        int                `bson:"score" json:"score"`
 }
