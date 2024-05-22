@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -50,6 +51,6 @@ func main() {
 
 	// Start the server
 	log.Println("Starting server on", server.Addr)
-	log.Printf("Time now %v", time.Now())
+	fmt.Printf("Time now %v", time.Now())
 	log.Fatal(server.ListenAndServe())
 }
