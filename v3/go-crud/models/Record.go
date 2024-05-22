@@ -14,10 +14,10 @@ import (
 
 type GameRecord struct {
 	ID           primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
-	UserID       primitive.ObjectID `bson:"userId" json:"userId"`
-	GameID       int                `bson:"gameId" json:"gameId"`
-	GameDateTime time.Time          `bson:"gameDateTime" json:"gameDateTime"`
-	GameTime     string             `bson:"gameTime" json:"gameTime"`
+	UserID       primitive.ObjectID `bson:"user_id" json:"userId"`
+	GameID       int                `bson:"game_id" json:"gameId"`
+	GameDateTime time.Time          `bson:"game_date_time" json:"gameDateTime"`
+	GameTime     string             `bson:"game_time" json:"gameTime"`
 	Score        int                `bson:"score" json:"score"`
 }
 
@@ -29,7 +29,7 @@ func InitRecordIndexes(db *mongo.Client) error {
 
 	// Creating an index for the UserID field
 	indexModel := mongo.IndexModel{
-		Keys:    bson.D{{Key: "userId", Value: 1}}, // Index in ascending order
+		Keys:    bson.D{{Key: "user_id", Value: 1}}, // Index in ascending order
 		Options: options.Index().SetUnique(false),
 	}
 
@@ -63,7 +63,7 @@ func GetRecordsByUserID(db *mongo.Client, userID primitive.ObjectID) ([]GameReco
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	cursor, err := collection.Find(ctx, bson.M{"userId": userID})
+	cursor, err := collection.Find(ctx, bson.M{"user_id": userID})
 	if err != nil {
 		log.Printf("Error retrieving records for user with ID %s: %v", userID.Hex(), err)
 		return nil, err

@@ -67,14 +67,14 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 func GetRecordsByUserID(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		userID, err := primitive.ObjectIDFromHex(vars["user_id"])
+		userID, err := primitive.ObjectIDFromHex(vars["userId"])
 		if err != nil {
 			http.Error(w, "Invalid user ID", http.StatusBadRequest)
 			return
 		}
 
 		collection := db.Database(config.MongodbDatabase).Collection("records")
-		filter := bson.M{"user_id": userID}
+		filter := bson.M{"userId": userID}
 		cursor, err := collection.Find(r.Context(), filter)
 		if err != nil {
 			http.Error(w, "Failed to fetch records", http.StatusInternalServerError)
