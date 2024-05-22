@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"go-crud/config"
 	"go-crud/models"
+	"log"
 	"net/http"
 	"time"
 
@@ -34,6 +35,7 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 
 		loc, _ := time.LoadLocation("Asia/Taipei")
 		formattedTime := time.Now().In(loc).Format("2006-01-02 15:04")
+		log.Printf("formattedTime: %s", formattedTime)
 
 		record := models.GameRecord{
 			UserID:       uid,
