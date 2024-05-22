@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"go-crud/config"
 	"go-crud/models"
+	"log"
 	"net/http"
 	"time"
 
@@ -15,34 +16,48 @@ import (
 
 func CreateRecord(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var record models.GameRecord
-		if err := json.NewDecoder(r.Body).Decode(&record); err != nil {
+		var input struct {
+			UserID   string `json:"user_id"`
+			GameID   int    `json:"game_id"`
+			GameTime string `json:"game_time"`
+			Score    int    `json:"score"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
 			http.Error(w, "Invalid request body: "+err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		record.GameDateTime = time.Now()
+		// Convert the user ID from string to ObjectID
+		uid, err := primitive.ObjectIDFromHex(input.UserID)
+		if err != nil {
+			http.Error(w, "Invalid user ID format", http.StatusBadRequest)
+			return
+		}
 
+		// Create a new record using the input data
+		record := models.GameRecord{
+			UserID:       uid,
+			GameID:       input.GameID,
+			GameDateTime: time.Now(),
+			GameTime:     input.GameTime,
+			Score:        input.Score,
+		}
+		log.Printf("Creating record with UserID %s", record.UserID.Hex())
+
+		// Insert the record into the database
 		collection := db.Database(config.MongodbDatabase).Collection("records")
-		_, err := collection.InsertOne(r.Context(), record)
+		result, err := collection.InsertOne(r.Context(), record)
 		if err != nil {
 			http.Error(w, "Failed to create record: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		// Convert ID and UserID to string
-		recordJson := map[string]interface{}{
-			"id":             record.ID.Hex(),
-			"user_id":        record.UserID.Hex(),
-			"game_id":        record.GameID,
-			"game_date_time": record.GameDateTime.Format(time.RFC3339),
-			"game_time":      record.GameTime,
-			"score":          record.Score,
-		}
+		// Set the inserted ID in the record object for the response
+		record.ID = result.InsertedID.(primitive.ObjectID)
 
-		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(recordJson)
+		json.NewEncoder(w).Encode(record)
 	}
 }
 
