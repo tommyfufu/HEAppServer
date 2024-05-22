@@ -42,7 +42,7 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 		record.GameDateTime = time.Now() // Setting current time as gameDateTime
 		log.Printf("record.UserId: %v, record.GameDateTime: %v", record.UserID, record.GameDateTime)
 		collection := db.Database(config.MongodbDatabase).Collection("records")
-		result, err := collection.InsertOne(r.Context(), record)
+		_, err = collection.InsertOne(r.Context(), record)
 		if err != nil {
 			http.Error(w, "Failed to create record: "+err.Error(), http.StatusInternalServerError)
 			return
@@ -50,7 +50,7 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(result)
+		json.NewEncoder(w).Encode(record)
 	}
 }
 
