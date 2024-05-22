@@ -163,6 +163,9 @@ func UpdatePatientMedication(db *mongo.Client) http.HandlerFunc {
 		}
 
 		log.Printf("Updating medication for patient %s with data: %v", id, medUpdate)
+		loc, _ := time.LoadLocation("Asia/Taipei")
+		formattedTime := time.Now().In(loc).Format("2006-01-02 15:04")
+		log.Printf("formattedTime: %s", formattedTime)
 
 		if err := models.UpdatePatientMedication(db, id, medUpdate.Medication); err != nil {
 			log.Printf("Error updating medication: %v", err)
