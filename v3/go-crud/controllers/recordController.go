@@ -17,9 +17,9 @@ import (
 func CreateRecord(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var input struct {
-			UserID   string `json:"user_id"`
-			GameID   int    `json:"game_id"`
-			GameTime string `json:"game_time"`
+			UserID   string `json:"userId"`
+			GameID   int    `json:"gameId"`
+			GameTime string `json:"gameTime"`
 			Score    int    `json:"score"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&input); err != nil {

@@ -14,10 +14,10 @@ import (
 
 type GameRecord struct {
 	ID           primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
-	UserID       primitive.ObjectID `bson:"user_id" json:"user_id"`
-	GameID       int                `bson:"game_id" json:"game_id"`
-	GameDateTime time.Time          `bson:"game_date_time" json:"game_date_time"`
-	GameTime     string             `bson:"game_time" json:"game_time"`
+	UserID       primitive.ObjectID `bson:"userId" json:"userId"`
+	GameID       int                `bson:"gameId" json:"gameId"`
+	GameDateTime time.Time          `bson:"gameDateTime" json:"gameDateTime"`
+	GameTime     string             `bson:"gameTime" json:"gameTime"`
 	Score        int                `bson:"score" json:"score"`
 }
 
