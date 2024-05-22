@@ -15,41 +15,34 @@ import (
 
 func CreateRecord(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// fmt.Println("Controller CreateRecord")
-
 		var record models.GameRecord
 		if err := json.NewDecoder(r.Body).Decode(&record); err != nil {
 			http.Error(w, "Invalid request body: "+err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		// Parse the user_id from the JSON body
-		var data struct {
-			UserID string `json:"user_id"`
-		}
-		if err := json.NewDecoder(r.Body).Decode(&data); err != nil {
-			http.Error(w, "Invalid or missing user ID", http.StatusBadRequest)
-			return
-		}
+		record.GameDateTime = time.Now()
 
-		uid, err := primitive.ObjectIDFromHex(data.UserID)
-		if err != nil {
-			http.Error(w, "Invalid user ID format", http.StatusBadRequest)
-			return
-		}
-		record.UserID = uid
-		record.GameDateTime = time.Now() // Setting current time as gameDateTime
-		// fmt.Printf("record.UserId: %v, record.GameDateTime: %v", record.UserID, record.GameDateTime)
 		collection := db.Database(config.MongodbDatabase).Collection("records")
-		_, err = collection.InsertOne(r.Context(), record)
+		_, err := collection.InsertOne(r.Context(), record)
 		if err != nil {
 			http.Error(w, "Failed to create record: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		// Convert ID and UserID to string
+		recordJson := map[string]interface{}{
+			"id":             record.ID.Hex(),
+			"user_id":        record.UserID.Hex(),
+			"game_id":        record.GameID,
+			"game_date_time": record.GameDateTime.Format(time.RFC3339),
+			"game_time":      record.GameTime,
+			"score":          record.Score,
+		}
+
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		json.NewEncoder(w).Encode(record)
+		json.NewEncoder(w).Encode(recordJson)
 	}
 }
 
