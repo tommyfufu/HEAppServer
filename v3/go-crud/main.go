@@ -50,5 +50,6 @@ func main() {
 
 	// Start the server
 	log.Println("Starting server on", server.Addr)
+	log.Printf("Time now %v", time.Now())
 	log.Fatal(server.ListenAndServe())
 }
