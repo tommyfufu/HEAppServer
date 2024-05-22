@@ -26,6 +26,11 @@ func main() {
 		log.Fatalf("Failed to initialize patient indexes: %v", err)
 	}
 
+	// Initialize indexes for Patients collection
+	if err := models.InitRecordIndexes(HEDB); err != nil {
+		log.Fatalf("Failed to initialize patient indexes: %v", err)
+	}
+
 	// setup router
 	r := routes.SetupRoutes(HEDB)
 	// Setup CORS
