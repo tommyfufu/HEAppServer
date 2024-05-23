@@ -62,9 +62,9 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 func GetRecordsByUserID(db *mongo.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
-		userID, err := primitive.ObjectIDFromHex(vars["userId"]) // Ensure the key matches your route definition
+		userID, err := primitive.ObjectIDFromHex(vars["userid"]) // Ensure the key matches your **route** definition
 		if err != nil {
-			log.Printf("Error converting user ID from hex: %v, received ID: %s", err, vars["userId"])
+			log.Printf("Error converting user ID from hex: %v, received ID: %s", err, vars["userid"])
 			http.Error(w, "Invalid user ID", http.StatusBadRequest)
 			return
 		}
