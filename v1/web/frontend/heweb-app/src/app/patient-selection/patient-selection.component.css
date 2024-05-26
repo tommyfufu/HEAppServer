@@ -1,15 +1,18 @@
-/* Ensure the select and option elements are visible */
-select, option {
-    color: black !important; /* Force text color to black */
-    background: white !important; /* Force background to white */
-    border: 1px solid black !important; /* Add border to see the boundaries */
-}
-
-
-.container * {
-    visibility: visible;
-}
-
-.container {
-    overflow: visible;
-}
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  option {
+    color: black; /* Improve readability */
+  }
+  
+  h1 {
+    margin-bottom: 10px;
+    color: #333;
+  }
+  

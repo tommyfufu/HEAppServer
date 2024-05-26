@@ -50,7 +50,7 @@ export class ApiService {
   // update a patient's information
   updatePatient(patientID: string, patientData: Patient): Observable<Patient> {
     return this.http
-      .patch<Patient>(`${this.baseUrl}/patient/${patientID}`, patientData, {
+      .put<Patient>(`${this.baseUrl}/patient/${patientID}`, patientData, {
         headers: { 'Content-Type': 'application/json; charset=UTF-8' },
       })
       .pipe(catchError(this.handleError));
