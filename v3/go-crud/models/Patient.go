@@ -160,8 +160,14 @@ func UpdatePatient(db *mongo.Client, id string, p Patient) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		log.Printf("Error converting ID to ObjectID: %v", err)
+		return err
+	}
+
 	update := bson.M{"$set": p}
-	_, err := collection.UpdateOne(ctx, bson.M{"_id": id}, update)
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objID}, update)
 	if err != nil {
 		log.Printf("Error updating patient with ID %s: %v", id, err)
 		return err
