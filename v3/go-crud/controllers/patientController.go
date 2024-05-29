@@ -195,6 +195,7 @@ func AddPatientMessage(db *mongo.Client) http.HandlerFunc {
 			http.Error(w, "Bad request: "+err.Error(), http.StatusBadRequest)
 			return
 		}
+		log.Printf("recv message: %v", message)
 
 		// Set the current timestamp in a human-readable format (TW timezone)
 		loc, _ := time.LoadLocation("Asia/Taipei")
