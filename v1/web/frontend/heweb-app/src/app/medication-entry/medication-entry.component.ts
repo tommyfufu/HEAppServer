@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -7,7 +7,7 @@ import {
 } from '@angular/forms';
 import { PatientDataService } from '../shared/patient-data.service';
 import { CommonModule } from '@angular/common';
-import { Patient } from '../models/patient.model';
+import { Patient, Medication } from '../models/patient.model';
 import { ApiService } from '../api-service.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -19,14 +19,10 @@ import { takeUntil } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
 })
-export class MedicationEntryComponent implements OnInit {
+export class MedicationEntryComponent implements OnInit, OnDestroy {
   medicationForm: FormGroup;
   private unsubscribe$ = new Subject<void>();
-  private currentPatientId: string | null = null;
-  // Dependency injection:
-  // - PatientDataService (get medication data of the patient)
-  // - ApiService (get patient's data)
-  // Initialize the form array
+
   constructor(
     private fb: FormBuilder,
     private patientDataService: PatientDataService,
@@ -42,14 +38,14 @@ export class MedicationEntryComponent implements OnInit {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((patient) => {
         if (patient) {
-          this.initFormWithMedications(patient.Medication);
+          this.initFormWithMedications(patient.medications);
         } else {
           this.clearFormArray(this.medications);
         }
       });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
@@ -58,41 +54,43 @@ export class MedicationEntryComponent implements OnInit {
     return this.medicationForm.get('medications') as FormArray;
   }
 
-  initFormWithMedications(medications: string[]) {
+  initFormWithMedications(medications: Medication[] | null | undefined): void {
     this.medications.clear();
-    // Fill the form array with existing medication records
-    medications.forEach((medication) => {
-      this.medications.push(this.fb.control(medication));
+    (medications || []).forEach(med => {
+        this.medications.push(this.fb.group({
+            Name: [med.name],
+            Dosage: [med.dosage],
+            Frequency: [med.frequency]
+        }));
     });
+}
+
+  addMedicationField(): void {
+    this.medications.push(
+      this.fb.group({
+        Name: [''],
+        Dosage: [0],
+        Frequency: [0],
+      })
+    );
   }
 
-  clearFormArray(formArray: FormArray) {
-    while (formArray.length !== 0) {
-      formArray.removeAt(0);
-    }
-  }
-
-  // Add a new empty medication field
-  addMedicationField() {
-    this.medications.push(this.fb.control(''));
-  }
-
-  submit() {
+  submit(): void {
     const patientID = this.patientDataService.getCurrentPatientId();
-
     if (!patientID) {
       console.error('No patient selected');
       return;
     }
 
-    const updatedMedications = this.medicationForm.value.medications;
+    const updatedMedications: Medication[] =
+      this.medicationForm.value.medications;
     this.apiService
       .addMedicationForPatient(patientID, updatedMedications)
       .subscribe({
         next: (updatedPatient) => {
           console.log('Updated patient medication:', updatedPatient);
           alert('Medication updated successfully!');
-          this.patientDataService.refreshCurrentPatient(); 
+          this.patientDataService.refreshCurrentPatient();
         },
         error: (error) => {
           console.error('Error updating medication:', error);
@@ -100,7 +98,14 @@ export class MedicationEntryComponent implements OnInit {
         },
       });
   }
+
   removeMedicationField(index: number): void {
     this.medications.removeAt(index);
+  }
+
+  private clearFormArray(formArray: FormArray): void {
+    while (formArray.length !== 0) {
+      formArray.removeAt(0);
+    }
   }
 }

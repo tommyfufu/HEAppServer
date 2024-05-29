@@ -1,10 +1,31 @@
 <form [formGroup]="medicationForm" (ngSubmit)="submit()">
   <div formArrayName="medications">
-    <div *ngFor="let medication of medications.controls; let i = index">
-      <input type="text" [formControlName]="i">
-      <button type="button" (click)="removeMedicationField(i)">刪除藥品</button>
+    <h3>需服藥品</h3>
+    <div *ngFor="let medication of medications.controls; let i = index" [formGroupName]="i">
+      <div class="medication-entry">
+        <!-- Name of the medication -->
+        <div class="form-group">
+          <label for="medName-{{i}}">藥品名稱:</label>
+          <input type="text" formControlName="Name" id="medName-{{i}}" class="form-control">
+        </div>
+        
+        <!-- Dosage input -->
+        <div class="form-group">
+          <label for="medDosage-{{i}}">每次劑量 (粒):</label>
+          <input type="number" formControlName="Dosage" id="medDosage-{{i}}" class="form-control">
+        </div>
+        
+        <!-- Frequency input -->
+        <div class="form-group">
+          <label for="medFrequency-{{i}}">每日頻率 (次):</label>
+          <input type="number" formControlName="Frequency" id="medFrequency-{{i}}" class="form-control">
+        </div>
+        
+        <!-- Remove medication button -->
+        <button type="button" class="btn btn-danger" (click)="removeMedicationField(i)">刪除藥品</button>
+      </div>
     </div>
   </div>
-  <button type="button" (click)="addMedicationField()">增加藥品</button>
-  <button type="submit">送出</button>
+  <button type="button" class="btn btn-info" (click)="addMedicationField()">增加藥品</button>
+  <button type="submit" class="btn btn-success">送出</button>
 </form>

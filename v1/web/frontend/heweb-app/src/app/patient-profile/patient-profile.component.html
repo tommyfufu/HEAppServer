@@ -1,20 +1,111 @@
-<div *ngIf="selectedPatient; else noSelection">
-  <h2>{{ selectedPatient.Name }}</h2>
-  <p>Email: {{ selectedPatient.Email }}</p>
-  <p>電話: {{ selectedPatient.Phone }}</p>
-  <p>生日: {{ selectedPatient.Birthday }}</p>
+<div
+  *ngIf="selectedPatient; else noSelection"
+  class="container rounded bg-white mt-5 mb-5"
+>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="p-3 py-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="text-right">病患個人資料</h2>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label class="labels">Name</label
+            ><input
+              *ngIf="tempPatient"
+              class="form-control"
+              [(ngModel)]="tempPatient.name"
+              [readonly]="!editMode"
+            />
+          </div>
+          <div class="col-md-6">
+            <label class="labels">Email</label
+            ><input
+              *ngIf="tempPatient"
+              class="form-control"
+              [(ngModel)]="tempPatient.email"
+              [readonly]="!editMode"
+            />
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <label class="labels">聯絡電話</label
+            ><input
+              *ngIf="tempPatient"
+              class="form-control"
+              [(ngModel)]="tempPatient.phone"
+              [readonly]="!editMode"
+            />
+          </div>
+          <div class="col-md-6">
+            <label class="labels">生日</label
+            ><input
+              *ngIf="tempPatient"
+              class="form-control"
+              [(ngModel)]="tempPatient.birthday"
+              [readonly]="!editMode"
+            />
+          </div>
+        </div>
+        <div class="row mt-2">
+          <div class="col-md-6">
+            <label class="labels">生理性別</label
+            ><input
+              *ngIf="tempPatient"
+              class="form-control"
+              [(ngModel)]="tempPatient.gender"
+              [readonly]="!editMode"
+            />
+          </div>
+          <div class="col-md-6">
+            <label class="labels">Asus VivoWatch 序號</label
+            ><input
+              *ngIf="tempPatient"
+              class="form-control"
+              [(ngModel)]="tempPatient.asusvivowatchsn"
+              [readonly]="!editMode"
+            />
+          </div>
+        </div>
+        <div class="mt-3 text-center">
+          <button
+            *ngIf="!editMode"
+            (click)="toggleEditMode()"
+            class="btn btn-primary profile-button"
+          >
+            編輯
+          </button>
+          <button
+            *ngIf="editMode"
+            (click)="saveChanges()"
+            class="btn btn-success save-button"
+          >
+            儲存
+          </button>
+          <button
+            *ngIf="editMode"
+            (click)="cancelEdit()"
+            class="btn btn-danger cancel-button"
+          >
+            取消
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="bulletin-board">
     <h3>留言</h3>
     <ul>
-      <li *ngFor="let message of getMessagesArray(selectedPatient.Messages)">
-        {{ message.date }}: <strong>{{ message.content }}</strong>
+      <li *ngFor="let message of getMessages()">
+        {{ message.date }}: <strong>{{ message.message }}</strong>
       </li>
     </ul>
   </div>
-  <p>Medication: {{ selectedPatient.Medication }}</p>
-  <h3>需服藥品</h3>
 </div>
 
 <ng-template #noSelection>
-  <p>點選列表並選擇病人</p>
+  <div class="alert alert-warning" role="alert">
+    Please select a patient to view the profile.
+  </div>
 </ng-template>

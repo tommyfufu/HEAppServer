@@ -1,0 +1,62 @@
+.medication-entry {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.medication-entry .form-group {
+  flex: 1 1 100%;  /* Make each input group take full width of the container */
+  margin-right: 10px; /* Space between fields */
+}
+
+.medication-entry input[type="text"], 
+.medication-entry input[type="number"] {
+  padding: 8px 10px;
+  margin-top: 5px;
+  width: calc(100% - 20px); /* Full width minus padding */
+}
+
+.medication-entry button {
+  padding: 8px 10px;
+  margin-top: 10px;
+}
+
+.btn-info, button[type="submit"] {
+  padding: 12px 20px; /* Increased padding for a larger button */
+  font-size: 18px; /* Larger font size for better visibility */
+  margin-top: 10px; /* Add some space above the button */
+  width: auto; /* Adjust width as necessary, or set specific width */
+  border: none; /* Remove default border for a cleaner look */
+  cursor: pointer; /* Indicate the button is clickable */
+  border-radius: 5px; /* Soften the edges with a border radius */
+  display: inline-block; /* Ensures buttons do not stretch full width */
+}
+
+/* Background colors for buttons to distinguish their actions */
+.btn-info {
+  background-color: #007bff; /* Blue for general actions like adding */
+}
+
+button[type="submit"] {
+  background-color: #4CAF50; /* Green for submit actions */
+}
+
+/* Hover effects to provide visual feedback on interaction */
+.btn-info:hover, button[type="submit"]:hover {
+  opacity: 0.8; /* Slightly dim the button on hover for effect */
+}
+
+/* Specific styles for the delete button within each medication entry */
+.btn-danger {
+  background-color: #f44336; /* Red for delete */
+  padding: 10px 18px; /* Sufficient padding */
+}
+
+.btn-danger:hover {
+  background-color: #d32f2f; /* Darker red on hover */
+}

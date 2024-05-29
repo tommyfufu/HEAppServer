@@ -1,9 +1,8 @@
 <!-- src/app/patient-selection/patient-selection.component.html -->
-
-
 <select (change)="onPatientSelect($event)">
-  <option value="" disabled selected>Select a patient</option>
-  <option *ngFor="let patient of patients" [value]="patient.ID">
-    {{ patient.Name }}
+  <h1>請選擇病人</h1>
+  <option value="" disabled selected>請選擇病人</option>
+  <option *ngFor="let patient of patients" [value]="patient._id">
+    {{ patient.name }}
   </option>
 </select>

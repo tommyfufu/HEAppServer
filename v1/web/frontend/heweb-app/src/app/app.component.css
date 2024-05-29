@@ -1,0 +1,14 @@
+.main-container {
+  display: flex;
+  height: 100vh;
+}
+
+.left-panel, .right-panel {
+  flex: 1;
+  overflow: auto; /* Scroll inside panels if needed */
+  padding: 20px;
+}
+
+.right-panel {
+  background-color: #f4f4f4; /* Slight background color for distinction */
+}
