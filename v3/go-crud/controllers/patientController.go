@@ -201,6 +201,8 @@ func AddPatientMessage(db *mongo.Client) http.HandlerFunc {
 		loc, _ := time.LoadLocation("Asia/Taipei")
 		message.Date = time.Now().In(loc).Format("2006-01-02 15:04")
 
+		log.Printf("new message: %v", message)
+
 		update := bson.M{
 			"$push": bson.M{"messages": message},
 		}
