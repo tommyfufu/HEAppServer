@@ -72,6 +72,14 @@ func CreatePatient(db *mongo.Client, p Patient) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
+	if p.Messages == nil {
+		p.Messages = []Message{}
+	}
+
+	if p.Medications == nil {
+		p.Medications = []MedicationType{}
+	}
+
 	_, err := collection.InsertOne(ctx, p)
 	if err != nil {
 		log.Printf("Error creating new patient in MongoDB: %v", err)
