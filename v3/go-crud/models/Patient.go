@@ -32,7 +32,7 @@ type Message struct {
 
 type MedicationType struct {
 	Name      string `bson:"name" json:"name"`
-	Dosage    int    `bson:"dosage" json:"dosage"`
+	Dosage    float64    `bson:"dosage" json:"dosage"`
 	Frequency int    `bson:"frequency" json:"frequency"`
 	IsTaken   bool   `bson:"istaken" json:"istaken"`
 }

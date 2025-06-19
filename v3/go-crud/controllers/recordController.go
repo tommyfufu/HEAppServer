@@ -33,7 +33,12 @@ func CreateRecord(db *mongo.Client) http.HandlerFunc {
 			return
 		}
 
-		loc, _ := time.LoadLocation("Asia/Taipei")
+		loc, err := time.LoadLocation("Asia/Taipei")
+        	if err != nil {
+           		 log.Printf("Failed to load location: %v", err)
+            		http.Error(w, "Failed to load location: "+err.Error(), http.StatusInternalServerError)
+           	 return
+        	}
 		formattedTime := time.Now().In(loc).Format("2006-01-02 15:04")
 		log.Printf("formattedTime: %s", formattedTime)
 
