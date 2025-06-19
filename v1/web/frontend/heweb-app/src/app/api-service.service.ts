@@ -8,7 +8,7 @@ import { Patient, Medication, Message } from './models/patient.model';
   providedIn: 'root',
 })
 export class ApiService {
-  private baseUrl = 'http://140.113.151.61:8090';
+  private baseUrl = 'http://13.236.164.131:8090';
   constructor(private http: HttpClient) {}
 
   getPatients(): Observable<Patient[]> {
