@@ -22,3 +22,12 @@ export interface Patient {
   messages: Message[];
   medications: Medication[];
 }
+
+export interface Record {
+  id: string;
+  userId: string;
+  gameId: number;
+  gameDateTime: string;
+  gameTime: string;
+  score: number;
+}

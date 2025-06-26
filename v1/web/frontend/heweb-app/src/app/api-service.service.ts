@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Patient, Medication, Message } from './models/patient.model';
+import { Record } from './models/patient.model';
 
 @Injectable({
   providedIn: 'root',
@@ -47,6 +48,15 @@ export class ApiService {
         catchError(this.handleError)
       );
   }
+
+  getRecords(userId: string): Observable<Record[]> {
+    return this.http
+      .get<Record[]>(`${this.baseUrl}/record/${userId}`, {
+        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+      })
+      .pipe(catchError(this.handleError));
+  }
+
   // update a patient's information
   updatePatient(patientID: string, patientData: Patient): Observable<Patient> {
     return this.http

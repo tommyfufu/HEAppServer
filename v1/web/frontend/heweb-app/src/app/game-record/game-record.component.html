@@ -1,0 +1,29 @@
+<div class="game-records">
+  <h3>遊戲紀錄</h3>
+
+  <div *ngIf="loading">載入中…</div>
+  <div *ngIf="error" class="text-danger">{{ error }}</div>
+
+  <table *ngIf="!loading && !error && records.length" class="table">
+    <thead>
+      <tr>
+        <th>Game ID</th>
+        <th>遊戲時間點</th>
+        <th>用時</th>
+        <th>分數</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let r of records">
+        <td>{{ r.gameId }}</td>
+        <td>{{ r.gameDateTime }}</td>
+        <td>{{ r.gameTime }}</td>
+        <td>{{ r.score }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && !error && records.length === 0">
+    尚無遊戲紀錄
+  </div>
+</div>

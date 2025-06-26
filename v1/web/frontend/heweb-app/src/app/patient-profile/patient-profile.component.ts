@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { PatientDataService } from '../shared/patient-data.service';
 import { Patient, Message } from '../models/patient.model';
 import { ApiService } from '../api-service.service';
+import { GameRecordComponent } from '../game-record/game-record.component';
 
 @Component({
   selector: 'app-patient-profile',
   templateUrl: './patient-profile.component.html',
   styleUrls: ['./patient-profile.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule], // Ensure FormsModule is imported for ngModel to work
+  imports: [CommonModule, FormsModule, GameRecordComponent], // Ensure FormsModule is imported for ngModel to work
 })
 export class PatientProfileComponent implements OnInit {
   selectedPatient: Patient | null = null;
