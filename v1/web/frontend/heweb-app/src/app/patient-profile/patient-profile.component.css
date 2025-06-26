@@ -4,9 +4,10 @@
     padding: 15px;
     border-radius: 5px;
     font-size: 18px; /* Set the base font size for the container */
-     max-width: 200%; /* Expand to full available width */
     width: 90%; /* Set to a percentage of the screen width */
     margin: auto; /* Center the container on the page */
+    height: auto;
+    min-height: 100vh;
   }
 
   .row {

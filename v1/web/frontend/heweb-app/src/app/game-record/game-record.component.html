@@ -1,29 +1,42 @@
-<div class="game-records">
-  <h3>遊戲紀錄</h3>
+<div class="game-record">
+    <h3 class="mb-3 fw-bold">遊戲紀錄</h3>
 
-  <div *ngIf="loading">載入中…</div>
-  <div *ngIf="error" class="text-danger">{{ error }}</div>
+    <div *ngIf="loading">載入中…</div>
+    <div *ngIf="error" class="text-danger">{{ error }}</div>
 
-  <table *ngIf="!loading && !error && records.length" class="table">
-    <thead>
-      <tr>
-        <th>Game ID</th>
-        <th>遊戲時間點</th>
-        <th>用時</th>
-        <th>分數</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let r of records">
-        <td>{{ r.gameId }}</td>
-        <td>{{ r.gameDateTime }}</td>
-        <td>{{ r.gameTime }}</td>
-        <td>{{ r.score }}</td>
-      </tr>
-    </tbody>
-  </table>
+    <div *ngIf="!loading && !error && records.length">
+        <div class="d-flex align-items-center mb-3">
+            <label for="gameSelect" class="me-2 mb-0 fw-semibold">選擇遊戲：</label>
+            <select id="gameSelect" class="form-select w-auto" [(ngModel)]="selectedGameId"
+                (change)="onSelectGame(selectedGameId)">
+                <option value="" disabled selected>請選擇遊戲</option>
+                <option *ngFor="let game of gameList" [value]="game.id">
+                    {{ game.name }}
+                </option>
+            </select>
+        </div>
 
-  <div *ngIf="!loading && !error && records.length === 0">
-    尚無遊戲紀錄
-  </div>
+        <div class="scrollable-table-container">
+            <table class="table table-bordered text-center align-middle game-record-table">
+                <thead class="table-light">
+                    <tr>
+                        <th>遊戲時間點</th>
+                        <th>用時</th>
+                        <th>分數</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let r of filteredRecords">
+                        <td>{{ r.gameDateTime }}</td>
+                        <td>{{ r.gameTime }}</td>
+                        <td>{{ r.score }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div *ngIf="!loading && !error && !records.length && !gameSelected" class="text-muted mt-2">
+        尚無遊戲紀錄
+    </div>
 </div>
+  

@@ -1,0 +1,34 @@
+.game-record-table th,
+.game-record-table td {
+  table-layout: fixed;
+  padding: 5pt;
+  text-align: center;
+  vertical-align: middle;
+  word-break: keep-all;
+  white-space: nowrap;
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.game-record-table th:nth-child(1),
+.game-record-table td:nth-child(1) {
+  width: 40%;
+}
+
+.game-record-table th:nth-child(2),
+.game-record-table td:nth-child(2) {
+  width: 50%;
+}
+
+.game-record-table th:nth-child(3),
+.game-record-table td:nth-child(3) {
+  width: 10%;
+}
+.scrollable-table-container {
+  max-height: 300px; /* 或你想要的高度 */
+  overflow-y: auto;
+  border-radius: 5px;
+  padding: 5pt;
+}
